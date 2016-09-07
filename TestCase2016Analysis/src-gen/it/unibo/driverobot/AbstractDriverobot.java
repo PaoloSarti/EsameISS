@@ -144,17 +144,8 @@ protected alice.tuprolog.SolveInfo sol;
     		if( ! execRobotMove("detect","stop",100,0,1000, "" , "") ) break;
     		temporaryStr = unifyMsgContent("bagFound","bagFound", guardVars ).toString();
     		emit( "bagFound", temporaryStr );
-    		{ String parg = "startBlink";
-    		  aar = solveGoal( parg , 0, "","" , "" );
-    		//println(getName() + " plan " + curPlanInExec  +  " interrupted=" + aar.getInterrupted() + " action goon="+aar.getGoon());
-    		if( aar.getInterrupted() ){
-    			curPlanInExec   = "detect";
-    			if( ! aar.getGoon() ) break;
-    		} 			
-    		if( aar.getResult().equals("failure")){
-    		if( ! aar.getGoon() ) break;
-    		}else if( ! aar.getGoon() ) break;
-    		}
+    		temporaryStr = " \"Start blinking the led\" ";
+    		println( temporaryStr );  
     		temporaryStr = " \"Starting detection Phase...\" ";
     		println( temporaryStr );  
     		if( (guardVars = evalTheGuard( " !?detect(X)" )) != null ){
@@ -163,17 +154,8 @@ protected alice.tuprolog.SolveInfo sol;
     		}
     		temporaryStr = " \"Detection Results Sent\" ";
     		println( temporaryStr );  
-    		{ String parg = "stopBlink";
-    		  aar = solveGoal( parg , 0, "","" , "" );
-    		//println(getName() + " plan " + curPlanInExec  +  " interrupted=" + aar.getInterrupted() + " action goon="+aar.getGoon());
-    		if( aar.getInterrupted() ){
-    			curPlanInExec   = "detect";
-    			if( ! aar.getGoon() ) break;
-    		} 			
-    		if( aar.getResult().equals("failure")){
-    		if( ! aar.getGoon() ) break;
-    		}else if( ! aar.getGoon() ) break;
-    		}
+    		temporaryStr = " \"Stop blinking the led\" ";
+    		println( temporaryStr );  
     		temporaryStr = " \"Back to base\" ";
     		println( temporaryStr );  
     		if( ! switchToPlan("backToBase").getGoon() ) break;
@@ -191,24 +173,11 @@ protected alice.tuprolog.SolveInfo sol;
     	boolean returnValue = suspendWork;
     while(true){
     nPlanIter++;
-    		if( (guardVars = evalTheGuard( " !?arrivedToBase" )) != null ){
-    		if( ! switchToPlan("finish").getGoon() ) break;
-    		}
-    		if( (guardVars = evalTheGuard( " !?nextInversedMove(X)" )) != null ){
-    		{ String parg = "X";
-    		parg = substituteVars(guardVars,parg);
-    		  aar = solveGoal( parg , 0, "","alarm" , "alarmReaction" );
-    		//println(getName() + " plan " + curPlanInExec  +  " interrupted=" + aar.getInterrupted() + " action goon="+aar.getGoon());
-    		if( aar.getInterrupted() ){
-    			curPlanInExec   = "backToBase";
-    			if( ! aar.getGoon() ) break;
-    		} 			
-    		if( aar.getResult().equals("failure")){
+    		//delay
+    		aar = delayReactive(20000,"alarm" , "alarmReaction");
+    		if( aar.getInterrupted() ) curPlanInExec   = "backToBase";
     		if( ! aar.getGoon() ) break;
-    		}else if( ! aar.getGoon() ) break;
-    		}
-    		}
-    		if( repeatPlan(0).getGoon() ) continue;
+    		if( ! switchToPlan("finish").getGoon() ) break;
     break;
     }//while
     return returnValue;

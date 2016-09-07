@@ -21,6 +21,12 @@ public class Operator extends AbstractOperator {
 	
 	protected List<String> driveCmdsSorted;
 	
+	public final static String Forward="Forward";
+	public final static String Backward="Backward";
+	public final static String Right="Right";
+	public final static String Left="left";
+	public final static String Halt="Halt";
+	
 	public Operator(String actorId, ActorContext myCtx, IOutputEnvView outEnvView )  throws Exception{
 		super(actorId, myCtx, outEnvView);		
 
@@ -28,38 +34,31 @@ public class Operator extends AbstractOperator {
 	
 	protected void initCmdMap(){
 		driveCmdMap=new HashMap<>();
-		driveCmdMap.put("Forward", "executeInput(move(mf,100,0))");
-		driveCmdMap.put("Backward", "executeInput(move(mb,100,0))");
-		driveCmdMap.put("Right", "executeInput(move(mr,100,0))");
-		driveCmdMap.put("Left", "executeInput(move(ml,100,0))");
-		driveCmdMap.put("Halt", "executeInput(move(h,100,0))");
+		driveCmdMap.put(Forward, "executeInput(move(mf,100,0))");
+		driveCmdMap.put(Backward, "executeInput(move(mb,100,0))");
+		driveCmdMap.put(Right, "executeInput(move(mr,100,0))");
+		driveCmdMap.put(Left, "executeInput(move(ml,100,0))");
+		driveCmdMap.put(Halt, "executeInput(move(h,100,0))");
 		driveCmdsSorted=new ArrayList<>();
-		driveCmdsSorted.add("Forward");
-		driveCmdsSorted.add("Backward");
-		driveCmdsSorted.add("Left");
-		driveCmdsSorted.add("Right");
-		driveCmdsSorted.add("Halt");
+		driveCmdsSorted.add(Forward);
+		driveCmdsSorted.add(Backward);
+		driveCmdsSorted.add(Left);
+		driveCmdsSorted.add(Right);
+		driveCmdsSorted.add(Halt);
+	}
+	
+	@Override
+	protected void addInputPanel(int size) {
 	}
 	
 	@Override
 	protected void addCmdPanels(){
-		super.addCmdPanels();
+		//super.addCmdPanels();
 		initCmdMap();
-		EnvFrame frame = (EnvFrame) env;
-		frame.setLayout(new FlowLayout());
-		frame.setSize(800, 450);
 		
 		driveCmdsSorted.forEach(cmd->{
-			Button button = new Button(cmd);
-			button.addActionListener(e->{
-				this.execAction(((Button)e.getSource()).getLabel());
-			});
-			
-			frame.add(button);
-			
-			//((EnvFrame) env).addCmdPanel(key,  new String[]{key}, this);
+			((EnvFrame) env).addCmdPanel(cmd,  new String[]{cmd}, this);
 		});
-		frame.validate();
 	}
 	
 	@Override

@@ -78,7 +78,7 @@ public abstract class AbstractOperator extends QActorPlanned implements IActivit
 	    while(true){
 	    nPlanIter++;
 	    		//senseEvent
-	    		timeoutval = 60000000;
+	    		timeoutval = 60000;
 	    		aar = senseEvents( timeoutval,"bagFound,local_inputDrive","found,sendDriveCommands",
 	    		"" , "",ActionExecMode.synch );
 	    		if( ! aar.getGoon() || aar.getTimeRemained() <= 0 ){

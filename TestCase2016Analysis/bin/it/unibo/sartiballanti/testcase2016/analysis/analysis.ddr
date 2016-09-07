@@ -5,37 +5,34 @@ RobotSystem testCase2016Analysis
  */
 
 Event local_inputDrive : local_inputDrive(X)	//events from GUI/External Input
-Dispatch drive : drive(X)		//Sent by the Operator 
-Event bagFound : bagFound	//Emitted by the DriveRobot, it signals that the bag was found
+Dispatch drive : drive(X)						//Sent by the Operator 
+Event bagFound : bagFound						//Emitted by the DriveRobot, it signals that the bag was found
 Dispatch detectionResults : detectionResults(X)	//Sent by the robot to the ASC 
 Event alarm : alarm
-Event local_alarm : local_alarm				//events from GUI/External Input
-Event obstacle : obstacle(X)	//local event from sensors
-Event sensordata     : sensordata(X) //from the (built.in) SensorObserver of a Robot
+Event local_alarm : local_alarm					//events from GUI/External Input
+Event obstacle : obstacle(X)					//local event from sensors
   
 /*
  *Structure 
  */
-Context ctxLocal ip[host="localhost" port=8005]
-//Context ctxDriveRobot ip[host="localhost" port=8010]
-//EventHandler evh for sensordata ;
-
-//Context ctxOperator ip[host="localhost" port=8015]
-//Context ctxASC ip[host="localhost" port=8020]
+//Context ctxLocal ip[host="localhost" port=8005]
+Context ctxDriveRobot ip[host="localhost" port=8010]
+Context ctxOperator ip[host="localhost" port=8015]
+Context ctxASC ip[host="localhost" port=8020]
 //Step 2
 //Context ctxSecondRobot ip[host="localhost" port=8025]
 
 /*
  * Behaviour
  */
-QActor operator context ctxLocal -g cyan
+QActor operator context ctxOperator -g cyan
 {
 	Plan init normal
 		println("Operator starts");
 		switchToPlan senseInput
 		
 	Plan senseInput
-		sense time(60000000) bagFound, local_inputDrive	 -> found, sendDriveCommands;
+		sense time(60000) bagFound, local_inputDrive -> found, sendDriveCommands;
 		repeatPlan 0
 		
 	Plan found 
@@ -45,7 +42,7 @@ QActor operator context ctxLocal -g cyan
 		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
 }
 
-QActor asc context ctxLocal -g green
+QActor asc context ctxASC -g green
 {
 	Plan init normal
 		println("ASC starts");
@@ -61,8 +58,7 @@ QActor asc context ctxLocal -g green
 		onEvent local_alarm : local_alarm -> emit alarm : alarm
 }
 
-
-Robot plexiBox QActor driverobot context ctxLocal 
+Robot plexiBox QActor driverobot context ctxDriveRobot 
 {
 	Plan init normal
 		println("driverobot starts");
@@ -79,18 +75,17 @@ Robot plexiBox QActor driverobot context ctxLocal
 		println("Stopping...");
 		robotStop speed(100) time(1000);
 		emit bagFound : bagFound;
-		solve startBlink time(0);
+		println("Start blinking the led");
 		println("Starting detection Phase...");
 		[!? detect(X)] forward asc -m detectionResults : detectionResults(X);
 		println("Detection Results Sent");
-		solve stopBlink time(0);
+		println("Stop blinking the led");
 		println("Back to base");
 		switchToPlan backToBase
 		
 	Plan backToBase
-		[!? arrivedToBase] switchToPlan finish;
-		[!? nextInversedMove(X)] solve X time(0) react event alarm -> alarmReaction;
-		repeatPlan 0
+		delay time(20000) react event alarm -> alarmReaction;
+		switchToPlan finish
 		
 	Plan alarmReaction resumeLastPlan
 		solve startBlink time(0)
