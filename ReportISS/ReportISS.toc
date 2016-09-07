@@ -1,0 +1,27 @@
+\select@language {english}
+\contentsline {title}{Software Systems Engineering\unskip \ \ignorespaces Case Study 2016}{1}
+\authcount {2}
+\contentsline {author}{Paolo Sarti\and Marcello Ballanti}{1}
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {2}Vision}{2}
+\contentsline {section}{\numberline {3}Goals}{2}
+\contentsline {section}{\numberline {4}Requirements}{2}
+\contentsline {section}{\numberline {5}Requirement analysis}{3}
+\contentsline {subsection}{\numberline {5.1}Use cases}{3}
+\contentsline {subsection}{\numberline {5.2}Scenarios}{4}
+\contentsline {subsection}{\numberline {5.3}Domain model}{4}
+\contentsline {subsection}{\numberline {5.4}Test plan}{5}
+\contentsline {section}{\numberline {6}Problem analysis}{5}
+\contentsline {subsection}{\numberline {6.1}Logic architecture}{5}
+\contentsline {subsection}{\numberline {6.2}Abstraction gap}{5}
+\contentsline {subsection}{\numberline {6.3}Risk analysis}{5}
+\contentsline {section}{\numberline {7}Work plan}{5}
+\contentsline {section}{\numberline {8}Project}{5}
+\contentsline {subsection}{\numberline {8.1}Structure}{5}
+\contentsline {subsection}{\numberline {8.2}Interaction}{5}
+\contentsline {subsection}{\numberline {8.3}Behavior}{5}
+\contentsline {section}{\numberline {9}Implementation}{5}
+\contentsline {section}{\numberline {10}Testing}{5}
+\contentsline {section}{\numberline {11}Deployment}{5}
+\contentsline {section}{\numberline {12}Maintenance}{5}
+\contentsline {section}{\numberline {13}Information about the author}{6}
