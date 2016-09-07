@@ -16,9 +16,9 @@ Event obstacle : obstacle(X)					//local event from sensors
  *Structure 
  */
 //Context ctxLocal ip[host="localhost" port=8005]
-Context ctxDriveRobot ip[host="localhost" port=8010]
-Context ctxOperator ip[host="localhost" port=8015]
-Context ctxASC ip[host="localhost" port=8020]
+Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
+Context ctxOperator ip[host="192.168.1.2" port=8015]
+Context ctxASC ip[host="192.168.1.2" port=8020]
 //Step 2
 //Context ctxSecondRobot ip[host="localhost" port=8025]
 
@@ -67,7 +67,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		
 	Plan drive 
 		receiveMsg time(600000) react event obstacle -> detect;
-		onMsg drive : drive(X) -> solve saveMove(X) time(0);
+		onMsg drive : drive(X) -> println(savingmove(X));
 		onMsg drive : drive(X) -> solve X time(0);
 		repeatPlan 0
 		
@@ -77,7 +77,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		emit bagFound : bagFound;
 		println("Start blinking the led");
 		println("Starting detection Phase...");
-		[!? detect(X)] forward asc -m detectionResults : detectionResults(X);
+		forward asc -m detectionResults : detectionResults(X);
 		println("Detection Results Sent");
 		println("Stop blinking the led");
 		println("Back to base");
@@ -88,7 +88,8 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		switchToPlan finish
 		
 	Plan alarmReaction resumeLastPlan
-		solve startBlink time(0)
+		println("Alarm!");
+		println("Start blinking the led")
 		
 	Plan finish
 		println("DriveRobot ends")

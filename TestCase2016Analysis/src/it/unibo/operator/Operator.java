@@ -3,14 +3,11 @@
 This code is generated only ONCE
 */
 package it.unibo.operator;
-import java.awt.Button;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import alice.tuprolog.Term;
 import it.unibo.baseEnv.basicFrame.EnvFrame;
 import it.unibo.is.interfaces.IOutputEnvView;
 import it.unibo.qactors.ActorContext;

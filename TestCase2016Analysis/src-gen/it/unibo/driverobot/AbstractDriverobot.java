@@ -93,20 +93,10 @@ protected alice.tuprolog.SolveInfo sol;
     				//println(getName() + " received " + aar.getResult() );
     		//onMsg
     		if( currentMessage.msgId().equals("drive") ){
-    			String parg="saveMove(X)";
+    			String parg = "savingmove(X)";
     			parg = updateVars(null, Term.createTerm("drive(X)"), Term.createTerm("drive(X)"), 
     				    		  					Term.createTerm(currentMessage.msgContent()), parg);
-    				if( parg != null ) {
-    					aar = solveGoal( parg , 0, "","" , "");
-    					//println(getName() + " plan " + curPlanInExec  +  " interrupted=" + aar.getInterrupted() + " action goon="+aar.getGoon());
-    					if( aar.getInterrupted() ){
-    						curPlanInExec   = "drive";
-    						if( ! aar.getGoon() ) break;
-    					} 			
-    					if( aar.getResult().equals("failure")){
-    						if( ! aar.getGoon() ) break;
-    					}else if( ! aar.getGoon() ) break;
-    				}
+    				if( parg != null ) println( parg );  
     		}//onMsg
     		if( currentMessage.msgId().equals("drive") ){
     			String parg="X";
@@ -148,10 +138,8 @@ protected alice.tuprolog.SolveInfo sol;
     		println( temporaryStr );  
     		temporaryStr = " \"Starting detection Phase...\" ";
     		println( temporaryStr );  
-    		if( (guardVars = evalTheGuard( " !?detect(X)" )) != null ){
     		temporaryStr = unifyMsgContent("detectionResults(X)","detectionResults(X)", guardVars ).toString();
     		sendMsg("detectionResults","asc", ActorContext.dispatch, temporaryStr ); 
-    		}
     		temporaryStr = " \"Detection Results Sent\" ";
     		println( temporaryStr );  
     		temporaryStr = " \"Stop blinking the led\" ";
@@ -192,17 +180,10 @@ protected alice.tuprolog.SolveInfo sol;
     	boolean returnValue = suspendWork;
     while(true){
     nPlanIter++;
-    		{ String parg = "startBlink";
-    		  aar = solveGoal( parg , 0, "","" , "" );
-    		//println(getName() + " plan " + curPlanInExec  +  " interrupted=" + aar.getInterrupted() + " action goon="+aar.getGoon());
-    		if( aar.getInterrupted() ){
-    			curPlanInExec   = "alarmReaction";
-    			if( ! aar.getGoon() ) break;
-    		} 			
-    		if( aar.getResult().equals("failure")){
-    		if( ! aar.getGoon() ) break;
-    		}else if( ! aar.getGoon() ) break;
-    		}
+    		temporaryStr = " \"Alarm!\" ";
+    		println( temporaryStr );  
+    		temporaryStr = " \"Start blinking the led\" ";
+    		println( temporaryStr );  
     		returnValue = continueWork;  
     break;
     }//while

@@ -5,5 +5,5 @@ plan(2,work, sentence(true,msgswitch(detectionResults, detectionResults( X) , mo
 plan(3,work, sentence(true,move( switchplan(senseAlarm) ),'','' ))
 plan(4,work, sentence(true,move(resumeplan),'','' ))
 plan(1,senseAlarm, sentence(true,senseEvent([local_alarm],[continue],'','' ))
-plan(2,senseAlarm, sentence(true,eventswitch(local_alarm, Â»local_alarm, raise( alarm , alarm )') ),'','' ))
+plan(2,senseAlarm, sentence(true,eventswitch(local_alarm, »local_alarm, raise( alarm , alarm )') ),'','' ))
 plan(3,senseAlarm, sentence(true,move(resumeplan),'','' ))
