@@ -9,22 +9,14 @@ import it.unibo.qactors.action.ActionDummy;
 import it.unibo.qactors.action.AsynchActionResult;
 import it.unibo.qactors.action.IActorAction;
 import it.unibo.qactors.action.IActorAction.ActionExecMode;
-import it.unibo.baseEnv.basicFrame.EnvFrame;
-import alice.tuprolog.SolveInfo;
-import it.unibo.is.interfaces.IActivity;
-import it.unibo.is.interfaces.IIntent;
 
-public abstract class AbstractAsc extends QActorPlanned implements IActivity{ 
+public abstract class AbstractAsc extends QActorPlanned { 
 	protected AsynchActionResult aar = null;
 	protected boolean actionResult = true;
 	protected alice.tuprolog.SolveInfo sol;
 	
 			protected static IOutputEnvView setTheEnv(IOutputEnvView outEnvView ){
-				EnvFrame env = new EnvFrame( "Env_asc", java.awt.Color.green  , java.awt.Color.black );
-				env.init();
-				env.setSize(800,400);
-				IOutputEnvView newOutEnvView = ((EnvFrame) env).getOutputEnvView();
-				return newOutEnvView;
+				return outEnvView;
 			}
 	
 	
@@ -32,17 +24,7 @@ public abstract class AbstractAsc extends QActorPlanned implements IActivity{
 			super(actorId, myCtx, "./srcMore/it/unibo/asc/plans.txt", 
 			"./srcMore/it/unibo/asc/WorldTheory.pl",
 			setTheEnv( outEnvView )  , "init");		
-			addInputPanel(80);
-			addCmdPanels();	
 	 	}
-	protected void addInputPanel(int size){
-		((EnvFrame) env).addInputPanel(size);			
-	}
-	protected void addCmdPanels(){
-		((EnvFrame) env).addCmdPanel("input", new String[]{"INPUT"}, this);
-		((EnvFrame) env).addCmdPanel("alarm", new String[]{"FIRE"}, this);
-		((EnvFrame) env).addCmdPanel("help",  new String[]{"HELP"}, this);				
-	}
 		@Override
 		protected void doJob() throws Exception {
 	 		initSensorSystem();
@@ -62,7 +44,7 @@ public abstract class AbstractAsc extends QActorPlanned implements IActivity{
 	    nPlanIter++;
 	    		temporaryStr = " \"ASC starts\" ";
 	    		println( temporaryStr );  
-	    		if( ! switchToPlan("work").getGoon() ) break;
+	    		if( ! switchToPlan("waitForResults").getGoon() ) break;
 	    break;
 	    }//while
 	    return returnValue;
@@ -71,9 +53,9 @@ public abstract class AbstractAsc extends QActorPlanned implements IActivity{
 	    throw e;
 	    }
 	    }
-	    public boolean work() throws Exception{	//public to allow reflection
+	    public boolean waitForResults() throws Exception{	//public to allow reflection
 	    try{
-	    	curPlanInExec =  "work";
+	    	curPlanInExec =  "waitForResults";
 	    	boolean returnValue = suspendWork;
 	    while(true){
 	    nPlanIter++;
@@ -94,7 +76,15 @@ public abstract class AbstractAsc extends QActorPlanned implements IActivity{
 	    			parg = updateVars(null, Term.createTerm("detectionResults(X)"), Term.createTerm("detectionResults(X)"), 
 	    				    		  					Term.createTerm(currentMessage.msgContent()), parg);
 	    				if( parg != null ) println( parg );  
-	    		}if( ! switchToPlan("senseAlarm").getGoon() ) break;
+	    		}//onMsg
+	    		if( currentMessage.msgId().equals("detectionResults") ){
+	    			String parg = "";
+	    			parg = updateVars(null, Term.createTerm("detectionResults(X)"), Term.createTerm("detectionResults(X)"), 
+	    				    		  					Term.createTerm(currentMessage.msgContent()), parg);
+	    				if( parg != null ){
+	    					 if( ! switchToPlan("riskDecision").getGoon() ) break; 
+	    				}//else println("guard  fails");  //parg is null when there is no guard (onEvent)
+	    		}
 	    break;
 	    }//while
 	    return returnValue;
@@ -103,28 +93,20 @@ public abstract class AbstractAsc extends QActorPlanned implements IActivity{
 	    throw e;
 	    }
 	    }
-	    public boolean senseAlarm() throws Exception{	//public to allow reflection
+	    public boolean riskDecision() throws Exception{	//public to allow reflection
 	    try{
-	    	curPlanInExec =  "senseAlarm";
+	    	curPlanInExec =  "riskDecision";
 	    	boolean returnValue = suspendWork;
 	    while(true){
 	    nPlanIter++;
-	    		//senseEvent
-	    		timeoutval = 100000;
-	    		aar = senseEvents( timeoutval,"local_alarm","continue",
-	    		"" , "",ActionExecMode.synch );
-	    		if( ! aar.getGoon() || aar.getTimeRemained() <= 0 ){
-	    			println("			WARNING: sense timeout");
-	    			addRule("tout(senseevent,"+getName()+")");
-	    			//break;
-	    		}
-	    		//onEvent
-	    		if( currentEvent.getEventId().equals("local_alarm") ){
-	    		 		String parg="alarm";
-	    		 		parg = updateVars(null,Term.createTerm("local_alarm"),  Term.createTerm("local_alarm"), 
-	    		 			    		  					Term.createTerm(currentEvent.getMsg()), parg);
-	    		 		if( parg != null ) emit( "alarm", parg );
-	    		 }
+	    		temporaryStr = " \"Evaluating risks\" ";
+	    		println( temporaryStr );  
+	    		//delay
+	    		aar = delayReactive(3000,"" , "");
+	    		if( aar.getInterrupted() ) curPlanInExec   = "riskDecision";
+	    		if( ! aar.getGoon() ) break;
+	    		temporaryStr = unifyMsgContent("alarm","alarm", guardVars ).toString();
+	    		emit( "alarm", temporaryStr );
 	    break;
 	    }//while
 	    return returnValue;
@@ -144,58 +126,5 @@ public abstract class AbstractAsc extends QActorPlanned implements IActivity{
 		* ------------------------------------------------------------
 		*/
 		
-		/* 
-		* ------------------------------------------------------------
-		* IACTIVITY
-		* ------------------------------------------------------------
-		*/
-		    private String[] actions = new String[]{
-		    	"println( STRING | TERM )", 
-		    	"play( FILENAME ) ",
-		"emit(EVID,EVCONTENT)  ",
-		"move(MOVE,DURATION,ANGLE)  with MOVE=mf|mb|ml|mr|ms",
-		"forward( DEST, MSGID, MSGCONTENTTERM)"
-		    };
-		    protected void doHelp(){
-				println("  GOAL ");
-				println("[ GUARD ], ACTION  ");
-				println("[ GUARD ], ACTION, DURATION ");
-				println("[ GUARD ], ACTION, DURATION, ENDEVENT ");
-				println("[ GUARD ], ACTION, DURATION,'',E VENTS, PLANS ");
-				println("Actions:");
-				for( int i=0; i<actions.length; i++){
-					println(" " + actions[i] );
-				}
-		    }
-		@Override
-		public void execAction(String cmd) {
-			if( cmd.equals("HELP") ){
-				doHelp();
-				return;
-			}
-			if( cmd.equals("FIRE") ){
-				platform.raiseEvent("input", "alarm", "alarm(fire)");
-				return;
-			}
-			String input = env.readln();
-			//input = "\""+input+"\"";
-			input = it.unibo.qactors.web.GuiUiKb.buildCorrectPrologString(input);
-			//println("input=" + input);
-			try {
-				Term.createTerm(input);
-				String eventMsg=it.unibo.qactors.web.QActorHttpServer.inputToEventMsg(input);
-				//println("QActor eventMsg " + eventMsg);
-				platform.raiseEvent("input", "local_"+it.unibo.qactors.web.GuiUiKb.inputCmd, eventMsg);
-	 		} catch (Exception e) {
-		 		println("QActor input error " + e.getMessage());
-			}
-		}
-	 	
-		@Override
-		public void execAction() {}
-		@Override
-		public void execAction(IIntent input) {}
-		@Override
-		public String execActionWithAnswer(String cmd) {return null;}
 	  }
 	

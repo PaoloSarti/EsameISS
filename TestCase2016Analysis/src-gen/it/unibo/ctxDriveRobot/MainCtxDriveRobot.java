@@ -31,7 +31,7 @@ private it.unibo.qactor.robot.RobotActor robot;
 				}
 		println("Starting the baseRobot (two robots cannot run in the same context).... ");
 		it.unibo.iot.executors.baseRobot.IBaseRobot baseRobot = 
-				it.unibo.qactor.robot.RobotSysKb.setRobotBase(this,  "plexiBox" );
+				it.unibo.qactor.robot.RobotSysKb.setRobotBase(this,  "mock" );
 		Thread.sleep(300); //Give time to the baseRobot to start
 		robot= new it.unibo.driverobot.Driverobot("driverobot", this, outEnvView, baseRobot);
 //			new it.unibo.driverobot.Driverobot("driverobot", this, outEnvView, baseRobot);

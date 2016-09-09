@@ -54,17 +54,6 @@ protected alice.tuprolog.SolveInfo sol;
     nPlanIter++;
     		temporaryStr = " \"driverobot starts\" ";
     		println( temporaryStr );  
-    		{ String parg = "consult( \"talkTheory.pl\" )";
-    		  aar = solveGoal( parg , 0, "","" , "" );
-    		//println(getName() + " plan " + curPlanInExec  +  " interrupted=" + aar.getInterrupted() + " action goon="+aar.getGoon());
-    		if( aar.getInterrupted() ){
-    			curPlanInExec   = "init";
-    			if( ! aar.getGoon() ) break;
-    		} 			
-    		if( aar.getResult().equals("failure")){
-    		if( ! switchToPlan("prologFailure").getGoon() ) break;
-    		}else if( ! aar.getGoon() ) break;
-    		}
     		if( ! switchToPlan("drive").getGoon() ) break;
     break;
     }//while
@@ -99,20 +88,10 @@ protected alice.tuprolog.SolveInfo sol;
     				if( parg != null ) println( parg );  
     		}//onMsg
     		if( currentMessage.msgId().equals("drive") ){
-    			String parg="X";
+    			String parg = "driving(X)";
     			parg = updateVars(null, Term.createTerm("drive(X)"), Term.createTerm("drive(X)"), 
     				    		  					Term.createTerm(currentMessage.msgContent()), parg);
-    				if( parg != null ) {
-    					aar = solveGoal( parg , 0, "","" , "");
-    					//println(getName() + " plan " + curPlanInExec  +  " interrupted=" + aar.getInterrupted() + " action goon="+aar.getGoon());
-    					if( aar.getInterrupted() ){
-    						curPlanInExec   = "drive";
-    						if( ! aar.getGoon() ) break;
-    					} 			
-    					if( aar.getResult().equals("failure")){
-    						if( ! aar.getGoon() ) break;
-    					}else if( ! aar.getGoon() ) break;
-    				}
+    				if( parg != null ) println( parg );  
     		}if( repeatPlan(0).getGoon() ) continue;
     break;
     }//while
@@ -130,15 +109,21 @@ protected alice.tuprolog.SolveInfo sol;
     nPlanIter++;
     		temporaryStr = " \"Stopping...\" ";
     		println( temporaryStr );  
-    		//stop
-    		if( ! execRobotMove("detect","stop",100,0,1000, "" , "") ) break;
-    		temporaryStr = unifyMsgContent("bagFound","bagFound", guardVars ).toString();
-    		emit( "bagFound", temporaryStr );
+    		//delay
+    		aar = delayReactive(1000,"" , "");
+    		if( aar.getInterrupted() ) curPlanInExec   = "detect";
+    		if( ! aar.getGoon() ) break;
     		temporaryStr = " \"Start blinking the led\" ";
     		println( temporaryStr );  
     		temporaryStr = " \"Starting detection Phase...\" ";
     		println( temporaryStr );  
-    		temporaryStr = unifyMsgContent("detectionResults(X)","detectionResults(X)", guardVars ).toString();
+    		//delay
+    		aar = delayReactive(3000,"" , "");
+    		if( aar.getInterrupted() ) curPlanInExec   = "detect";
+    		if( ! aar.getGoon() ) break;
+    		temporaryStr = " \"Sending results\" ";
+    		println( temporaryStr );  
+    		temporaryStr = unifyMsgContent("detectionResults(X)","detectionResults( \"results\" )", guardVars ).toString();
     		sendMsg("detectionResults","asc", ActorContext.dispatch, temporaryStr ); 
     		temporaryStr = " \"Detection Results Sent\" ";
     		println( temporaryStr );  
@@ -209,23 +194,6 @@ protected alice.tuprolog.SolveInfo sol;
     throw e;
     }
     }
-    public boolean prologFailure() throws Exception{	//public to allow reflection
-    try{
-    	curPlanInExec =  "prologFailure";
-    	boolean returnValue = suspendWork;
-    while(true){
-    nPlanIter++;
-    		temporaryStr = " \"Failed to load talkTheory\" ";
-    		println( temporaryStr );  
-    		returnValue = continueWork;  
-    break;
-    }//while
-    return returnValue;
-    }catch(Exception e){
-    println( getName() + " ERROR " + e.getMessage() );
-    throw e;
-    }
-    }
     /* 
     * ------------------------------------------------------------
     * SENSORS
@@ -250,7 +218,10 @@ protected alice.tuprolog.SolveInfo sol;
     //COMPONENTS
      RobotComponent motorleft 
      RobotComponent motorright 
-    sensor distanceRadar  todo  
+    sensor l1Mock simulated debug=0   
+    sensor distFrontMock simulated debug=0   
+    sensor mgn1 simulated debug=0   
+    Composed component rot
     Composed component motors
     */
     protected void addSensorObservers(){

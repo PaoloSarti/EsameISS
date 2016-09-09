@@ -1,83 +1,68 @@
 RobotSystem testCase2016Analysis
 
-/*
- * Interaction
- */
-
-Event local_inputDrive : local_inputDrive(X)	//events from GUI/External Input
-Dispatch drive : drive(X)						//Sent by the Operator 
-Event bagFound : bagFound						//Emitted by the DriveRobot, it signals that the bag was found
-Dispatch detectionResults : detectionResults(X)	//Sent by the robot to the ASC 
-Event alarm : alarm
-Event local_alarm : local_alarm					//events from GUI/External Input
-Event obstacle : obstacle(X)					//local event from sensors
+Dispatch drive : drive(X)						 
+Dispatch detectionResults : detectionResults(X)	 
+Event alarm : alarm								
+Event obstacle : obstacle(X)					
   
-/*
- *Structure 
- */
-//Context ctxLocal ip[host="localhost" port=8005]
 Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
 Context ctxOperator ip[host="192.168.1.2" port=8015]
 Context ctxASC ip[host="192.168.1.2" port=8020]
-//Step 2
-//Context ctxSecondRobot ip[host="localhost" port=8025]
 
-/*
- * Behaviour
- */
-QActor operator context ctxOperator -g cyan
+QActor operator context ctxOperator
 {
 	Plan init normal
 		println("Operator starts");
-		switchToPlan senseInput
+		switchToPlan sendCommands
 		
-	Plan senseInput
-		sense time(60000) bagFound, local_inputDrive -> found, sendDriveCommands;
-		repeatPlan 0
-		
-	Plan found 
-		onEvent bagFound : bagFound -> println("Bag found")
-		
-	Plan sendDriveCommands
-		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
+	Plan sendCommands
+		println("Waiting for commands");
+		delay time(3000);
+		println("Sending command");
+		forward driverobot -m drive : drive("driveCmdPayLoad");
+		println("Command sent");
+		delay time(2000);
+		repeatPlan 0	
 }
 
-QActor asc context ctxASC -g green
+QActor asc context ctxASC
 {
 	Plan init normal
 		println("ASC starts");
-		switchToPlan work
+		switchToPlan waitForResults
 		
-	Plan work
+	Plan waitForResults
 		receiveMsg time(600000);
 		onMsg detectionResults : detectionResults(X) -> println(detectionResults(X));
-		switchToPlan senseAlarm
+		onMsg detectionResults : detectionResults(X) -> switchToPlan riskDecision
 		
-	Plan senseAlarm
-		sense time(100000) local_alarm -> continue;
-		onEvent local_alarm : local_alarm -> emit alarm : alarm
+	Plan riskDecision
+		println("Evaluating risks");
+		delay time(3000);
+		//It could emit the alarm signal
+		emit alarm : alarm		
 }
 
-Robot plexiBox QActor driverobot context ctxDriveRobot 
+Robot mock QActor driverobot context ctxDriveRobot 
 {
 	Plan init normal
 		println("driverobot starts");
-		solve consult("talkTheory.pl") time(0) onFailSwitchTo prologFailure;
 		switchToPlan drive
 		
 	Plan drive 
 		receiveMsg time(600000) react event obstacle -> detect;
 		onMsg drive : drive(X) -> println(savingmove(X));
-		onMsg drive : drive(X) -> solve X time(0);
+		onMsg drive : drive(X) -> println(driving(X));
 		repeatPlan 0
 		
 	Plan detect
 		println("Stopping...");
-		robotStop speed(100) time(1000);
-		emit bagFound : bagFound;
+		delay time(1000);
 		println("Start blinking the led");
 		println("Starting detection Phase...");
-		forward asc -m detectionResults : detectionResults(X);
+		delay time(3000);
+		println("Sending results");
+		forward asc -m detectionResults : detectionResults("results");
 		println("Detection Results Sent");
 		println("Stop blinking the led");
 		println("Back to base");
@@ -93,9 +78,6 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		
 	Plan finish
 		println("DriveRobot ends")
-		
-	Plan prologFailure resumeLastPlan
-		println("Failed to load talkTheory")
 }
 
 

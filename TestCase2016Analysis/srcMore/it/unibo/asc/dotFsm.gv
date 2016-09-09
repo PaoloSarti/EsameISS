@@ -16,7 +16,7 @@ digraph finite_state_machine {
   	iniziale -> init [label = ""];
   	
   	
-  	init -> work [ label = ""];
+  	init -> waitForResults [ label = ""];
   	
-  	work -> senseAlarm [ label = "detectionResults(X)/"];
+  	waitForResults -> riskDecision [ label = "detectionResults(X)/"];
 }

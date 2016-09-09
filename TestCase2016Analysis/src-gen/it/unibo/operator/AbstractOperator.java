@@ -9,22 +9,14 @@ import it.unibo.qactors.action.ActionDummy;
 import it.unibo.qactors.action.AsynchActionResult;
 import it.unibo.qactors.action.IActorAction;
 import it.unibo.qactors.action.IActorAction.ActionExecMode;
-import it.unibo.baseEnv.basicFrame.EnvFrame;
-import alice.tuprolog.SolveInfo;
-import it.unibo.is.interfaces.IActivity;
-import it.unibo.is.interfaces.IIntent;
 
-public abstract class AbstractOperator extends QActorPlanned implements IActivity{ 
+public abstract class AbstractOperator extends QActorPlanned { 
 	protected AsynchActionResult aar = null;
 	protected boolean actionResult = true;
 	protected alice.tuprolog.SolveInfo sol;
 	
 			protected static IOutputEnvView setTheEnv(IOutputEnvView outEnvView ){
-				EnvFrame env = new EnvFrame( "Env_operator", java.awt.Color.cyan  , java.awt.Color.black );
-				env.init();
-				env.setSize(800,400);
-				IOutputEnvView newOutEnvView = ((EnvFrame) env).getOutputEnvView();
-				return newOutEnvView;
+				return outEnvView;
 			}
 	
 	
@@ -32,17 +24,7 @@ public abstract class AbstractOperator extends QActorPlanned implements IActivit
 			super(actorId, myCtx, "./srcMore/it/unibo/operator/plans.txt", 
 			"./srcMore/it/unibo/operator/WorldTheory.pl",
 			setTheEnv( outEnvView )  , "init");		
-			addInputPanel(80);
-			addCmdPanels();	
 	 	}
-	protected void addInputPanel(int size){
-		((EnvFrame) env).addInputPanel(size);			
-	}
-	protected void addCmdPanels(){
-		((EnvFrame) env).addCmdPanel("input", new String[]{"INPUT"}, this);
-		((EnvFrame) env).addCmdPanel("alarm", new String[]{"FIRE"}, this);
-		((EnvFrame) env).addCmdPanel("help",  new String[]{"HELP"}, this);				
-	}
 		@Override
 		protected void doJob() throws Exception {
 	 		initSensorSystem();
@@ -62,7 +44,7 @@ public abstract class AbstractOperator extends QActorPlanned implements IActivit
 	    nPlanIter++;
 	    		temporaryStr = " \"Operator starts\" ";
 	    		println( temporaryStr );  
-	    		if( ! switchToPlan("senseInput").getGoon() ) break;
+	    		if( ! switchToPlan("sendCommands").getGoon() ) break;
 	    break;
 	    }//while
 	    return returnValue;
@@ -71,64 +53,29 @@ public abstract class AbstractOperator extends QActorPlanned implements IActivit
 	    throw e;
 	    }
 	    }
-	    public boolean senseInput() throws Exception{	//public to allow reflection
+	    public boolean sendCommands() throws Exception{	//public to allow reflection
 	    try{
-	    	curPlanInExec =  "senseInput";
+	    	curPlanInExec =  "sendCommands";
 	    	boolean returnValue = suspendWork;
 	    while(true){
 	    nPlanIter++;
-	    		//senseEvent
-	    		timeoutval = 60000;
-	    		aar = senseEvents( timeoutval,"bagFound,local_inputDrive","found,sendDriveCommands",
-	    		"" , "",ActionExecMode.synch );
-	    		if( ! aar.getGoon() || aar.getTimeRemained() <= 0 ){
-	    			println("			WARNING: sense timeout");
-	    			addRule("tout(senseevent,"+getName()+")");
-	    			//break;
-	    		}
+	    		temporaryStr = " \"Waiting for commands\" ";
+	    		println( temporaryStr );  
+	    		//delay
+	    		aar = delayReactive(3000,"" , "");
+	    		if( aar.getInterrupted() ) curPlanInExec   = "sendCommands";
+	    		if( ! aar.getGoon() ) break;
+	    		temporaryStr = " \"Sending command\" ";
+	    		println( temporaryStr );  
+	    		temporaryStr = unifyMsgContent("drive(X)","drive( \"driveCmdPayLoad\" )", guardVars ).toString();
+	    		sendMsg("drive","driverobot", ActorContext.dispatch, temporaryStr ); 
+	    		temporaryStr = " \"Command sent\" ";
+	    		println( temporaryStr );  
+	    		//delay
+	    		aar = delayReactive(2000,"" , "");
+	    		if( aar.getInterrupted() ) curPlanInExec   = "sendCommands";
+	    		if( ! aar.getGoon() ) break;
 	    		if( repeatPlan(0).getGoon() ) continue;
-	    break;
-	    }//while
-	    return returnValue;
-	    }catch(Exception e){
-	    println( getName() + " ERROR " + e.getMessage() );
-	    throw e;
-	    }
-	    }
-	    public boolean found() throws Exception{	//public to allow reflection
-	    try{
-	    	curPlanInExec =  "found";
-	    	boolean returnValue = suspendWork;
-	    while(true){
-	    nPlanIter++;
-	    		//onEvent
-	    		if( currentEvent.getEventId().equals("bagFound") ){
-	    		 		String parg = " \"Bag found\" ";
-	    		 		parg = updateVars(null, Term.createTerm("bagFound"), Term.createTerm("bagFound"), 
-	    		 			    		  					Term.createTerm(currentEvent.getMsg()), parg);
-	    		 			if( parg != null ) println( parg );  
-	    		 }
-	    break;
-	    }//while
-	    return returnValue;
-	    }catch(Exception e){
-	    println( getName() + " ERROR " + e.getMessage() );
-	    throw e;
-	    }
-	    }
-	    public boolean sendDriveCommands() throws Exception{	//public to allow reflection
-	    try{
-	    	curPlanInExec =  "sendDriveCommands";
-	    	boolean returnValue = suspendWork;
-	    while(true){
-	    nPlanIter++;
-	    		//onEvent
-	    		if( currentEvent.getEventId().equals("local_inputDrive") ){
-	    		 		String parg="drive(X)";
-	    		 		parg = updateVars(null,Term.createTerm("local_inputDrive(X)"),  Term.createTerm("local_inputDrive(X)"), 
-	    		 			    		  					Term.createTerm(currentEvent.getMsg()), parg);
-	    		 		if( parg != null ) sendMsg("drive","driverobot", ActorContext.dispatch, parg ); 
-	    		 }
 	    break;
 	    }//while
 	    return returnValue;
@@ -148,58 +95,5 @@ public abstract class AbstractOperator extends QActorPlanned implements IActivit
 		* ------------------------------------------------------------
 		*/
 		
-		/* 
-		* ------------------------------------------------------------
-		* IACTIVITY
-		* ------------------------------------------------------------
-		*/
-		    private String[] actions = new String[]{
-		    	"println( STRING | TERM )", 
-		    	"play( FILENAME ) ",
-		"emit(EVID,EVCONTENT)  ",
-		"move(MOVE,DURATION,ANGLE)  with MOVE=mf|mb|ml|mr|ms",
-		"forward( DEST, MSGID, MSGCONTENTTERM)"
-		    };
-		    protected void doHelp(){
-				println("  GOAL ");
-				println("[ GUARD ], ACTION  ");
-				println("[ GUARD ], ACTION, DURATION ");
-				println("[ GUARD ], ACTION, DURATION, ENDEVENT ");
-				println("[ GUARD ], ACTION, DURATION,'',E VENTS, PLANS ");
-				println("Actions:");
-				for( int i=0; i<actions.length; i++){
-					println(" " + actions[i] );
-				}
-		    }
-		@Override
-		public void execAction(String cmd) {
-			if( cmd.equals("HELP") ){
-				doHelp();
-				return;
-			}
-			if( cmd.equals("FIRE") ){
-				platform.raiseEvent("input", "alarm", "alarm(fire)");
-				return;
-			}
-			String input = env.readln();
-			//input = "\""+input+"\"";
-			input = it.unibo.qactors.web.GuiUiKb.buildCorrectPrologString(input);
-			//println("input=" + input);
-			try {
-				Term.createTerm(input);
-				String eventMsg=it.unibo.qactors.web.QActorHttpServer.inputToEventMsg(input);
-				//println("QActor eventMsg " + eventMsg);
-				platform.raiseEvent("input", "local_"+it.unibo.qactors.web.GuiUiKb.inputCmd, eventMsg);
-	 		} catch (Exception e) {
-		 		println("QActor input error " + e.getMessage());
-			}
-		}
-	 	
-		@Override
-		public void execAction() {}
-		@Override
-		public void execAction(IIntent input) {}
-		@Override
-		public String execActionWithAnswer(String cmd) {return null;}
 	  }
 	
