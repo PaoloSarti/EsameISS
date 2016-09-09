@@ -1,4 +1,4 @@
-RobotSystem testCase2016Analysis
+RobotSystem testCase2016LogicArchitecture
 
 /*
  * Interaction
@@ -11,10 +11,10 @@ Dispatch detectionResults : detectionResults(X)	//Sent by the robot to the ASC
 Event alarm : alarm
 Event local_alarm : local_alarm					//events from GUI/External Input
 Event obstacle : obstacle(X)					//local event from sensors
-  
-/*
- *Structure 
- */
+Event startBlink : startBlink
+Event stopBlink : stopBlink
+
+
 //Context ctxLocal ip[host="localhost" port=8005]
 Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
 Context ctxOperator ip[host="192.168.1.2" port=8015]
@@ -22,9 +22,32 @@ Context ctxASC ip[host="192.168.1.2" port=8020]
 //Step 2
 //Context ctxSecondRobot ip[host="localhost" port=8025]
 
-/*
- * Behaviour
- */
+
+QActor led context ctxDriveRobot {
+	
+	Plan init normal
+		println("Led starts");
+		switchToPlan senseStartBlink
+		
+	Plan senseStartBlink
+		println("Led Off");
+		sense time(60000) startBlink -> startBlinking;
+		repeatPlan 0
+		
+	Plan startBlinking
+		println("led On");
+		delay time(1000) react event stopBlink -> senseAlarm;
+		println("Led Off");
+		delay time(1000) react event stopBlink -> senseAlarm;
+		repeatPlan 0
+		
+	Plan senseAlarm
+		println("Led Off");
+		sense time(60000) alarm-> startBlinking;
+		repeatPlan 0
+}
+
+
 QActor operator context ctxOperator -g cyan
 {
 	Plan init normal
@@ -58,7 +81,7 @@ QActor asc context ctxASC -g green
 		onEvent local_alarm : local_alarm -> emit alarm : alarm
 }
 
-Robot plexiBox QActor driverobot context ctxDriveRobot 
+Robot mock QActor driverobot context ctxDriveRobot 
 {
 	Plan init normal
 		println("driverobot starts");
@@ -74,17 +97,16 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 	Plan detect
 		println("Stopping...");
 		robotStop speed(100) time(1000);
-		emit bagFound : bagFound;
-		println("Start blinking the led");
+		emit startBlink : startBlink;
 		println("Starting detection Phase...");
 		forward asc -m detectionResults : detectionResults(X);
 		println("Detection Results Sent");
-		println("Stop blinking the led");
+		emit stopBlink : stopBlink;
 		println("Back to base");
 		switchToPlan backToBase
 		
 	Plan backToBase
-		delay time(20000) react event alarm -> alarmReaction;
+		delay time(20000);	//It doesn't need to react, as 
 		switchToPlan finish
 		
 	Plan alarmReaction resumeLastPlan
@@ -92,6 +114,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		println("Start blinking the led")
 		
 	Plan finish
+		emit stopBlink : stopBlink;
 		println("DriveRobot ends")
 		
 	Plan prologFailure resumeLastPlan
