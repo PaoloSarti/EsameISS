@@ -33,8 +33,10 @@ QActor asc context ctxASC
 		
 	Plan waitForResults
 		receiveMsg time(600000);
-		onMsg detectionResults : detectionResults(X) -> println(detectionResults(X));
-		onMsg detectionResults : detectionResults(X) -> switchToPlan riskDecision
+		onMsg detectionResults : detectionResults(X) -> 
+		println(detectionResults(X));
+		onMsg detectionResults : detectionResults(X) -> 
+		switchToPlan riskDecision
 		
 	Plan riskDecision
 		println("Evaluating risks");
