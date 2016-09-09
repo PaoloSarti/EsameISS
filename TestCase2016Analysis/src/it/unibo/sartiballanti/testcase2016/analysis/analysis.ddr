@@ -5,9 +5,9 @@ Dispatch detectionResults : detectionResults(X)
 Event alarm : alarm								
 Event obstacle : obstacle(X)					
   
-Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
-Context ctxOperator ip[host="192.168.1.2" port=8015]
-Context ctxASC ip[host="192.168.1.2" port=8020]
+Context ctxDriveRobot ip[host="localhost" port=8010]
+Context ctxOperator ip[host="localhost" port=8015]
+Context ctxASC ip[host="localhost" port=8020]
 
 QActor operator context ctxOperator
 {
