@@ -8,6 +8,10 @@
 %\usepackage[latin1]{inputenc}
 \usepackage[english]{babel}
 \usepackage[T1]{fontenc}
+\usepackage{color}
+\usepackage{listings}
+
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \usepackage{url}
@@ -41,6 +45,23 @@
  \DeclareGraphicsExtensions{.eps, .jpg}
  \fi
 %%%%%%%%%%%%%%%
+
+\lstdefinelanguage{ddr}{
+keywords = {RobotSystem, Dispatch, Event, event, Context, context, ip, host, port, QActor, Robot, Plan, switchToPlan, println, forward, delay, normal, repeatPlan, onMsg, react, sense, receiveMsg, time, resumeLastPlan},
+morecomment=[l]//,
+morestring=[b]"
+}
+
+\lstset{
+language = {ddr},
+keywordstyle = \color{blue},
+commentstyle= \color{green},
+stringstyle = \color{mymauve},
+showstringspaces=false,
+tabsize = 2,
+breaklines = true,
+numbers=left
+}
 
 \newcommand{\java}{\textsf{Java}}
 \newcommand{\contact}{\emph{Contact}}
@@ -104,7 +125,6 @@
 %
 %%% \newcommand{\todo}[1]{\bf{TODO:}\emph{#1}}
 
-
 \begin{document}
 
 \title{Software Systems Engineering\\
@@ -139,13 +159,19 @@ The following report describes the software development process for an IoT appli
 %===========================================================================
 We want to discuss the process of software development in order to overcome the limits of a technology-based approach in heterogeneous distributed system application design.
 We try to adopt a model-driven software development taking into account the AGILE and SCRUM methods for cooperation and work management.
+In particular, we want to:
+\begin{itemize}
+\item define a formal, executable model of the application to receive feedback from the client and ensure that requirements are clearly defined as soon as possible 
+\item minimize the abstraction gap between the development tools and the application domain entities
+\item delay any technological hypotesis as much as possible in order to improve application reusability
+\item create flexible applications to resist requirements changes and add new features easily
+\end{itemize}
 %===========================================================================
 \section{Goals}
 \labelsec{Goals}
 %===========================================================================
-%Maybe it's not only the analysis, but the whole product (or prototype)
-%And maybe also learn some thigs? Maybe?
-The goal is to produce an objective, formal and technology-independent analysis of the given problem, allowing us to introduce the technological ipothesis as far as possible during development. It should remain valid in any configuration in a heterogeneous and distributed environment. The analysis model should also be executable since its very definition to be shown and discussed with the client. When the client requirements are met, we also have a prototype as a starting point for the implementation phase.
+The goal is to solve the given problem following the principles described in the vision and determine if this approach is viable and convenient. We want to build a prototype quickly and test if we can add new features to the application with minimum effort.\\
+We'll use domain specific languages to
 %===========================================================================
 \section{Requirements}
 \labelsec{Requirements}
@@ -236,9 +262,9 @@ These interactions are shown by the UML below:
 %\subsection{Requirements model}
 %\labelssec{Requirements model}
 
-\subsection{Domain model}
+\subsection{(Domain) model}
 \labelssec{Domain model}
-In this phase we try to find an agreement with the client on what the entities mentioned in the requirements are.\\The system is composed by three parts:
+In this phase we try to find an agreement with the client on what the entities mentioned in the requirements are and what they have to do.\\The system is composed by three parts:
 \begin{itemize}
 \item \textbf{Operator's remote console}
 \item \textbf{Airport Security Center's remote console}
@@ -249,7 +275,13 @@ A \textbf{console} is a physical or virtual device that allows communication bet
 DC motors, wheels, led and sonar are the hardware components mounted on the robot.
 \\A \textbf{DC motor} can spin the attached wheel clockwise or counter-clockwise.
 \\A \textbf{led} can be turned on or off.
-\\A \textbf{sonar} can send an ultrasonic signal (trigger) and generates a corresponding response waveform (echo). The waveform analysis allows to estimate the distance from an obstacle.
+\\A \textbf{sonar} can send an ultrasonic signal (trigger) and generates a corresponding response waveform (echo). The waveform analysis allows to estimate the distance from an obstacle.\\ \\
+The system can be formally defined with a custom language / executable meta-model developed by our software house. It allows us to describe what are the parts of the system, how they interact with each other and their behaviour. \\ \\
+The following is a first description of the system obtained by the requirement analysis:
+%inserire qui il listato .ddr di analisi dei requisiti
+\lstinputlisting[language=ddr, frame=single]{../TestCase2016Analysis/src/it/unibo/sartiballanti/testcase2016/analysis/analysis.ddr}
+The operator can only send commands to drive the robot.
+The Airport Security Center waits for the detection results and can emit the alarm only after the results have been sent.
 %\subsection{System model}
 
 \subsection{Test plan}
