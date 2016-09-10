@@ -104,7 +104,7 @@ Robot mock QActor driverobot context ctxDriveRobot
 		switchToPlan backToBase
 		
 	Plan backToBase
-		solve backToBase time(6000000);	//It doesn't need to react, as the qactor led handles that
+		solve backToBase time(0);	//It doesn't need to react, as the qactor led handles that
 		switchToPlan finish
 		
 	Plan finish
