@@ -285,6 +285,28 @@ The Airport Security Center waits for the detection results and can emit the ala
 %\subsection{System model}
 
 \subsection{Test plan}
+We can do a test plan even before starting to implement the application, we just need to check if the parts of the system behave and interact with each other as defined in the requirements.
+In the initial phase, the operator drives the robot. We have to check the following:
+\begin{itemize}
+\item the commands are sent to the robot
+\item the robot executes the commands it receives
+\item the robot perceives the presence of an obstacle
+\end{itemize}
+In the detection phase, the robot inspects the bag. We'll test the following:
+\begin{itemize}
+\item the robot stops and ignores commands from the operator
+\item the robot starts blinking after it stopped
+\item the robot can send the results to the Airport Security Center
+\item the Airport Security Center can receive the results of the inspection
+\item the robot stops blinking at the end of this phase
+\end{itemize}
+In the final phase, the robot comes back to the RBA. These are the tests we'll do:
+\begin{itemize}
+\item the robot actually comes back autonomously
+\item the Airport Security Center can emit the alarm signal
+\item the robot blinks the led if it perceives the alarm
+\end{itemize}
+At this stage in the development process, we can't define more specific functional or integration test. However, we could test the parts of the system defined with our custom language creating mock entities that 
 
 %===========================================================================
 \section{Problem analysis}
