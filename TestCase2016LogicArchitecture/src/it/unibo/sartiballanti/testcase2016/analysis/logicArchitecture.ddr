@@ -19,8 +19,6 @@ Event stopBlink : stopBlink
 Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
 Context ctxOperator ip[host="192.168.1.2" port=8015]
 Context ctxASC ip[host="192.168.1.2" port=8020]
-//Step 2
-//Context ctxSecondRobot ip[host="localhost" port=8025]
 
 
 QActor led context ctxDriveRobot {
@@ -99,19 +97,15 @@ Robot mock QActor driverobot context ctxDriveRobot
 		robotStop speed(100) time(1000);
 		emit startBlink : startBlink;
 		println("Starting detection Phase...");
-		forward asc -m detectionResults : detectionResults(X);
+		[?? detection(X) ] forward asc -m detectionResults : detectionResults(X);
 		println("Detection Results Sent");
 		emit stopBlink : stopBlink;
 		println("Back to base");
 		switchToPlan backToBase
 		
 	Plan backToBase
-		delay time(20000);	//It doesn't need to react, as 
+		solve backToBase time(0);	//It doesn't need to react, as the qactor led handles that
 		switchToPlan finish
-		
-	Plan alarmReaction resumeLastPlan
-		println("Alarm!");
-		println("Start blinking the led")
 		
 	Plan finish
 		emit stopBlink : stopBlink;
