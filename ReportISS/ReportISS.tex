@@ -170,8 +170,7 @@ In particular, we want to:
 \section{Goals}
 \labelsec{Goals}
 %===========================================================================
-The goal is to solve the given problem following the principles described in the vision and determine if this approach is viable and convenient. We want to build a prototype quickly and test if we can add new features to the application with minimum effort.\\
-We'll use domain specific languages to
+The goal is to solve the given problem following the principles described in the vision and determine if this approach is viable and convenient. We want to build a prototype quickly and test if we can add new features to the application with minimum effort.
 %===========================================================================
 \section{Requirements}
 \labelsec{Requirements}
@@ -286,9 +285,10 @@ The Airport Security Center waits for the detection results and can emit the ala
 
 \subsection{Test plan}
 We can do a test plan even before starting to implement the application, we just need to check if the parts of the system behave and interact with each other as defined in the requirements.
+We describe these tests in natural language
 In the initial phase, the operator drives the robot. We have to check the following:
 \begin{itemize}
-\item the commands are sent to the robot
+\item the operator can send commands to the robot
 \item the robot executes the commands it receives
 \item the robot perceives the presence of an obstacle
 \end{itemize}
@@ -306,7 +306,8 @@ In the final phase, the robot comes back to the RBA. These are the tests we'll d
 \item the Airport Security Center can emit the alarm signal
 \item the robot blinks the led if it perceives the alarm
 \end{itemize}
-At this stage in the development process, we can't define more specific functional or integration test. However, we could test the parts of the system defined with our custom language creating mock entities that 
+At this stage in the development process, we can't define more specific functional or integration tests.
+We still haven't decided what technology we will use to implement the application, so we can't write executable tests yet.
 
 %===========================================================================
 \section{Problem analysis}
