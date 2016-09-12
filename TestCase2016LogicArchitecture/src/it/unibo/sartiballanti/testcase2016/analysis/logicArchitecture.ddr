@@ -1,28 +1,20 @@
 RobotSystem testCase2016LogicArchitecture
 
-/*
- * Interaction
- */
-
 Event local_inputDrive : local_inputDrive(X)	//events from GUI/External Input
-Dispatch drive : drive(X)						//Sent by the Operator 
-Event bagFound : bagFound						//Emitted by the DriveRobot, it signals that the bag was found
-Dispatch detectionResults : detectionResults(X)	//Sent by the robot to the ASC 
+Dispatch drive : drive(X)
+Dispatch detectionResults : detectionResults(X)	
 Event alarm : alarm
 Event local_alarm : local_alarm					//events from GUI/External Input
-Event obstacle : obstacle(X)					//local event from sensors
+Event obstacle : obstacle(X)
 Event startBlink : startBlink
 Event stopBlink : stopBlink
 
-
-//Context ctxLocal ip[host="localhost" port=8005]
 Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
 Context ctxOperator ip[host="192.168.1.2" port=8015]
 Context ctxASC ip[host="192.168.1.2" port=8020]
 
-
-QActor led context ctxDriveRobot {
-	
+QActor led context ctxDriveRobot 
+{	
 	Plan init normal
 		println("Led starts");
 		switchToPlan senseStartBlink
@@ -45,7 +37,6 @@ QActor led context ctxDriveRobot {
 		repeatPlan 0
 }
 
-
 QActor operator context ctxOperator -g cyan
 {
 	Plan init normal
@@ -53,11 +44,8 @@ QActor operator context ctxOperator -g cyan
 		switchToPlan senseInput
 		
 	Plan senseInput
-		sense time(60000) bagFound, local_inputDrive -> found, sendDriveCommands;
+		sense time(60000) local_inputDrive -> sendDriveCommands;
 		repeatPlan 0
-		
-	Plan found 
-		onEvent bagFound : bagFound -> println("Bag found")
 		
 	Plan sendDriveCommands
 		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
@@ -114,5 +102,3 @@ Robot mock QActor driverobot context ctxDriveRobot
 	Plan prologFailure resumeLastPlan
 		println("Failed to load talkTheory")
 }
-
-
