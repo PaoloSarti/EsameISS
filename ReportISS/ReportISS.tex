@@ -284,8 +284,8 @@ The Airport Security Center waits for the detection results and can emit the ala
 %\subsection{System model}
 
 \subsection{Test plan}
-We can do a test plan even before starting to implement the application, we just need to check if the parts of the system behave and interact with each other as defined in the requirements.
-We describe these tests in natural language
+We can do a test plan even before starting to implement the application, as a means to specify the expected behaviour of the system in a precise way. We just need to check if the parts of the system behave and interact with each other as defined in the requirements.
+We can't express tests formally tough, because we already described the entities as actors, so object oriented tests (e.g. JUnit tests) are inadequate. Furthermore, some tests check the interaction of the physiscal system with the environment and this can only be done observing the actual behaviour of the system. Thus, we'll describe these tests in natural language.\\
 In the initial phase, the operator drives the robot. We have to check the following:
 \begin{itemize}
 \item the operator can send commands to the robot
@@ -306,34 +306,55 @@ In the final phase, the robot comes back to the RBA. These are the tests we'll d
 \item the Airport Security Center can emit the alarm signal
 \item the robot blinks the led if it perceives the alarm
 \end{itemize}
-At this stage in the development process, we can't define more specific functional or integration tests.
-We still haven't decided what technology we will use to implement the application, so we can't write executable tests yet.
+At this stage in the development process, we can't define more specific functional or integration tests, we'll add them as needed during the implementation phase.
+We still haven't decided what technology we will use to implement the application, so we can't write executable tests yet. However, at the end of the analysis phase, we'll have an executable logical architecture of the application and we'll be able to perform some of the tests on it.
 
 %===========================================================================
 \section{Problem analysis}
 \labelsec{ProblemAnalysis}
 %===========================================================================
 \subsection{Logic architecture}
-%Copia pippone sulle 3 dimensioni dal suo sito
-
+Logic architecture can be expressed in 3 dimensions:
 \begin{enumerate}
-\item Structure:
-\begin{itemize}
-\item \textbf{DriveRobot} differential drive (two motor-wheels) robot equipped with a sonar.
-\item \textbf{Operator Interface} used by the operator to drive the robot to the suspicious bag.
-\item \textbf{ASCConsole} allows the Airport Security Center to receive the results of the detection phase and to emit alarm signal
-\end{itemize}
-\item Interaction: 
-\item Behaviour:
+\item \textbf{Structure}: what parts the system is made of.
+\item \textbf{Interaction}: how the parts of the system communicate with each other.
+\item \textbf{Behaviour}: what the parts of the system do.
 \end{enumerate}
+We can formally express these concepts with the DDR custom language:
+\lstinputlisting[language=ddr, frame=single]{../TestCase2016LogicArchitecture/src/it/unibo/sartiballanti/testcase2016/analysis/logicArchitecture.ddr}
+This describes the whole logic architecture of our application. It can also be executed so that the client can confirm that the analysis defined a system that behaves as required.\\
+This architecture derives from the one obtained in the domain model and introduces new interactions and a new entity.\\
+The \textbf{DriveRobot} receives commands from the Operator Interface in the first phase, executes its automatic operations during the detection phase, it sends results to the ASCConsole and comes back to the RBA in the end. It has to react to obstacles to begin the detection phase.\\
+The \textbf{Operator Interface} receives commands from the operator as events and sends the corresponding commands to the robot.\\
+The \textbf{ASCConsole} receives the detection results from the detection phase and then enables the Airport Security Center to emit the alarm.\\
+We decided to introduce the \textbf{led} as an active entity separated from the robot because it is an active entity that has to intecract with other entities and has its own behaviour, modeling it as a passive object managed by the robot is inappropriate. The led starts or stops to blink when the robot asks to do so and it starts to blink if the alarm is emitted when the robot is coming back.\\
+The interaction with external entities (the operator and the ASC) have been modeled as local events.
 \subsection{Abstraction gap}
+The abstraction gap is the distance between the concepts used to model the problem and those implied by the technology of choice. Thanks to the framework provided, executable code is generated from the model defined in the ddr meta-model. Thus, adopting this framework allows the application designers to use an extremely high-level description of the problem, closer to the application domain, reducing considerably the abstraction gap. The specific technology to be used can be decided later, in a configuration phase. The advantage of using a meta-model and a code generator is also that it can be extended to support more advanced concepts.
 \subsection{Risk analysis}
-
+Using the framework code generators, we can write most of the code independently from the specific implementation technology. Although the qa/ddr metamodel is technology independent, the code generated automatically may require some kind of environment on the computational nodes where it will be deployed (e.g. the JVM, the .NET runtime environment, a specific operating system etc).
 %===========================================================================
 \section{Work plan}
 \labelsec{wplan}
 %===========================================================================
-
+After the analysis phase, we decided to develop the application using the ddr framework, so that we don't start from scratch. We can reuse the executable logic architecture and enhance it. The framework already offers the implementation logic for some parts of the system and it offers high level abstractions that allow the developers to focus on business logic and not worry too much about boilerplate code.\\
+We'll use the following features offered by the framework:
+\begin{itemize}
+\item A communication system that allows the parts of the system to send and receive messages and events
+\item Reactive actions
+\item Timed actions
+\item The robot configuration
+\item DC motors driver
+\item sonar driver (and management of its data)
+\end{itemize}
+We need to implement these features:
+\begin{itemize}
+\item the interfaces that generate the external entities interaction events
+\item the led blinking logic
+\item the detection phase logic
+\item an algorithm that allows the robot to come back to the RBA
+\end{itemize}
+We also need to decide which platforms will be used by the operator and the Airport Security Center.
 %===========================================================================
 \section{Project}
 \labelsec{Project}

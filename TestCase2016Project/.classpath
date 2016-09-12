@@ -14,5 +14,8 @@
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/uniboInterfaces.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/unibonoawtsupports.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/uniboQactorRobot.jar"/>
+	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/blsRasp.jar"/>
+	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/blsHL.jar"/>
+	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/blsProxy.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
