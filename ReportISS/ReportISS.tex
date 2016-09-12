@@ -337,7 +337,24 @@ Using the framework code generators, we can write most of the code independently
 \section{Work plan}
 \labelsec{wplan}
 %===========================================================================
-
+After the analysis phase, we decided to develop the application using the ddr framework, so that we don't start from scratch. We can reuse the executable logic architecture and enhance it. The framework already offers the implementation logic for some parts of the system and it offers high level abstractions that allow the developers to focus on business logic and not worry too much about boilerplate code.\\
+We'll use the following features offered by the framework:
+\begin{itemize}
+\item A communication system that allows the parts of the system to send and receive messages and events
+\item Reactive actions
+\item Timed actions
+\item The robot configuration
+\item DC motors driver
+\item sonar driver (and management of its data)
+\end{itemize}
+We need to implement these features:
+\begin{itemize}
+\item the interfaces that generate the external entities interaction events
+\item the led blinking logic
+\item the detection phase logic
+\item an algorithm that allows the robot to come back to the RBA
+\end{itemize}
+We also need to decide which platforms will be used by the operator and the Airport Security Center.
 %===========================================================================
 \section{Project}
 \labelsec{Project}
