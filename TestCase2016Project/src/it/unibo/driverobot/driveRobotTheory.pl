@@ -38,6 +38,9 @@ backToBase([H,T]):-
 	executeInput(RH),
 	backToBase(T).
 
+getCurrentMillis(M):-
+	class("it.unibo.sartiballanti.utils.Utils") <- getCurrentTimeMillis  returns M.
+
 revMove(move(mf,X,Y,Z),move(mb,X,Y,Z)).
 revMove(move(mb,X,Y,Z),move(mf,X,Y,Z)).
 revMove(move(mr,X,Y,Z),move(ml,X,Y,Z)).
