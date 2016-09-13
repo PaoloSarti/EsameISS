@@ -52,7 +52,7 @@ QActor operator context ctxOperator -g cyan
 		sense time(60000) local_inputDrive -> sendDriveCommands;
 		repeatPlan 0
 		
-	Plan sendDriveCommands
+	Plan sendDriveCommands resumeLastPlan
 		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
 }
 
@@ -101,6 +101,7 @@ Robot mock QActor driverobot context ctxDriveRobot
 		
 	Plan detect
 		println("Stopping...");
+		solve endSavemove time(0);
 		robotStop speed(100) time(1000);
 		emit bagFound : bagFound;
 		println("Starting detection Phase...");
@@ -118,5 +119,5 @@ Robot mock QActor driverobot context ctxDriveRobot
 		println("DriveRobot ends")
 		
 	Plan prologFailure resumeLastPlan
-		println("Failed to load talkTheory")
+		println("Failed to load prolog theories")
 }
