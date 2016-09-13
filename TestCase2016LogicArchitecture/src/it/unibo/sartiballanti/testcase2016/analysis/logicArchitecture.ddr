@@ -6,8 +6,8 @@ Dispatch detectionResults : detectionResults(X)
 Event alarm : alarm
 Event local_alarm : local_alarm					//events from GUI/External Input
 Event obstacle : obstacle(X)
-Event startBlink : startBlink
-Event stopBlink : stopBlink
+Event bagFound : bagFound
+Event endDetection : endDetection
 
 Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
 Context ctxOperator ip[host="192.168.1.2" port=8015]
@@ -21,14 +21,14 @@ QActor led context ctxDriveRobot
 		
 	Plan senseStartBlink
 		println("Led Off");
-		sense time(60000) startBlink -> startBlinking;
+		sense time(60000) bagFound -> startBlinking;
 		repeatPlan 0
 		
 	Plan startBlinking
 		println("led On");
-		delay time(1000) react event stopBlink -> senseAlarm;
+		delay time(1000) react event endDetection -> senseAlarm;
 		println("Led Off");
-		delay time(1000) react event stopBlink -> senseAlarm;
+		delay time(1000) react event endDetection -> senseAlarm;
 		repeatPlan 0
 		
 	Plan senseAlarm
@@ -75,6 +75,7 @@ Robot mock QActor driverobot context ctxDriveRobot
 		switchToPlan drive
 		
 	Plan drive 
+		//We'll have to make sure that the robot executes the commands from the first console only
 		receiveMsg time(600000) react event obstacle -> detect;
 		onMsg drive : drive(X) -> println(savingmove(X));
 		onMsg drive : drive(X) -> solve X time(0);
@@ -83,11 +84,11 @@ Robot mock QActor driverobot context ctxDriveRobot
 	Plan detect
 		println("Stopping...");
 		robotStop speed(100) time(1000);
-		emit startBlink : startBlink;
+		emit bagFound : bagFound;
 		println("Starting detection Phase...");
 		[?? detection(X) ] forward asc -m detectionResults : detectionResults(X);
 		println("Detection Results Sent");
-		emit stopBlink : stopBlink;
+		emit endDetection : endDetection;
 		println("Back to base");
 		switchToPlan backToBase
 		
@@ -96,7 +97,6 @@ Robot mock QActor driverobot context ctxDriveRobot
 		switchToPlan finish
 		
 	Plan finish
-		emit stopBlink : stopBlink;
 		println("DriveRobot ends")
 		
 	Plan prologFailure resumeLastPlan

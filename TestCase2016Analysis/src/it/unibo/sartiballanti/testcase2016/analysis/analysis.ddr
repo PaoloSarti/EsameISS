@@ -52,6 +52,7 @@ Robot mock QActor driverobot context ctxDriveRobot
 		switchToPlan drive
 		
 	Plan drive 
+		//We'll have to make sure that the robot executes the commands from the first console only
 		receiveMsg time(600000) react event obstacle -> detect;
 		onMsg drive : drive(X) -> println(savingmove(X));
 		onMsg drive : drive(X) -> println(driving(X));
