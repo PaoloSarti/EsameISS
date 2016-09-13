@@ -25,8 +25,7 @@ public class Operator extends AbstractOperator {
 	public final static String Halt="Halt";
 	
 	public Operator(String actorId, ActorContext myCtx, IOutputEnvView outEnvView )  throws Exception{
-		super(actorId, myCtx, outEnvView);		
-
+		super(actorId, myCtx, outEnvView);
 	}
 	
 	protected void initCmdMap(){
