@@ -5,6 +5,8 @@ This code is generated only ONCE
 package it.unibo.asc;
 import java.awt.Button;
 import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Panel;
 
 import it.unibo.baseEnv.basicFrame.EnvFrame;
 import it.unibo.is.interfaces.IOutputEnvView;
@@ -18,8 +20,12 @@ public class Asc extends AbstractAsc {
 	
 	@Override
 	protected void addCmdPanels(){
-		super.addCmdPanels();
-		
+		//super.addCmdPanels();
+		//photo panel
+		Panel results = new Panel();
+		results.setSize(300, 400);
+		((Frame) env).setLayout(new FlowLayout());
+		((Frame) env).add(results);
 		((EnvFrame) env).addCmdPanel("Alarm", new String[]{"Alarm"}, this);
 	}
 	

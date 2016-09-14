@@ -3,6 +3,16 @@
 This code is generated only ONCE
 */
 package it.unibo.operator;
+import java.awt.Button;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,12 +45,12 @@ public class Operator extends AbstractOperator {
 		driveCmdMap.put(Right, "executeInput(move(mr,100,0))");
 		driveCmdMap.put(Left, "executeInput(move(ml,100,0))");
 		driveCmdMap.put(Halt, "executeInput(move(h,100,0))");
-		driveCmdsSorted=new ArrayList<>();
-		driveCmdsSorted.add(Forward);
-		driveCmdsSorted.add(Backward);
-		driveCmdsSorted.add(Left);
-		driveCmdsSorted.add(Right);
-		driveCmdsSorted.add(Halt);
+//		driveCmdsSorted=new ArrayList<>();
+//		driveCmdsSorted.add(Forward);
+//		driveCmdsSorted.add(Backward);
+//		driveCmdsSorted.add(Left);
+//		driveCmdsSorted.add(Right);
+//		driveCmdsSorted.add(Halt);
 	}
 	
 	@Override
@@ -51,12 +61,68 @@ public class Operator extends AbstractOperator {
 	protected void addCmdPanels(){
 		//super.addCmdPanels();
 		initCmdMap();
+		//((EnvFrame) env).removeAll();
+		//((EnvFrame) env).setLayout(new FlowLayout());
+		((EnvFrame) env).setSize(800,700);
+		Panel p = new Panel();
+		GridLayout l =  new GridLayout();
+		l.setVgap(10);
+		l.setHgap(10);
+		l.setColumns(3);
+		l.setRows(3);
+		p.setLayout(l);
 		
-		driveCmdsSorted.forEach(cmd->{
-			((EnvFrame) env).addCmdPanel(cmd,  new String[]{cmd}, this);
-		});
+		MouseListener ml =new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				execAction(Halt);
+				System.out.println("DEBUG: UNPRESSED");
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				Button b = (Button)e.getSource();
+				execAction(b.getLabel());
+				System.out.println("DEBUG: PRESSED" +  b.getLabel());
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+			}	
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+			}
+		};
+		
+		Button forward = new Button(Forward);
+		forward.addMouseListener(ml);
+		Button backward = new Button(Backward);
+		backward.addMouseListener(ml);
+		Button right = new Button(Right);
+		right.addMouseListener(ml);
+		Button left = new Button(Left);
+		left.addMouseListener(ml);
+		Button halt = new Button(Halt);
+		halt.addMouseListener(ml);
+		p.add(new Label(""));
+		p.add(forward);
+		p.add(new Label(""));
+		p.add(left);
+		p.add(halt);
+		p.add(right);
+		p.add(new Label(""));
+		p.add(backward);
+		p.add(new Label(""));
+		((EnvFrame) env).add(p);
+		((EnvFrame) env).validate();
 	}
 	
+	
+
 	@Override
 	public void execAction(String cmd) {
 		super.execAction(cmd);
