@@ -9,9 +9,9 @@ Event obstacle : obstacle(X)
 Event bagFound : bagFound
 Event endDetection : endDetection
 
-Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
-Context ctxOperator ip[host="192.168.1.2" port=8015]
-Context ctxASC ip[host="192.168.1.2" port=8020]
+Context ctxDriveRobot ip[host="192.168.0.13" port=8010]
+Context ctxOperator ip[host="192.168.0.8" port=8015]
+Context ctxASC ip[host="192.168.0.8" port=8020]
 
 QActor led context ctxDriveRobot 
 {	
@@ -29,10 +29,10 @@ QActor led context ctxDriveRobot
 	Plan startBlinking
 		println("led On");
 		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
-		delay time(1000) react event endDetection -> senseAlarm;
+		delay time(500) react event endDetection -> senseAlarm;
 		println("Led Off");
 		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
-		delay time(1000) react event endDetection -> senseAlarm;
+		delay time(500) react event endDetection -> senseAlarm;
 		repeatPlan 0
 		
 	Plan senseAlarm
@@ -42,7 +42,7 @@ QActor led context ctxDriveRobot
 		repeatPlan 0
 		
 	Plan prologFailure
-		println("Prolog Failure")
+		println("Prolog Failure LED")
 }
 
 QActor operator context ctxOperator -g cyan
@@ -76,18 +76,21 @@ QActor asc context ctxASC -g green
 		onEvent local_alarm : local_alarm -> emit alarm : alarm
 		
 	Plan prologFailure resumeLastPlan
-		println("Prolog failure")
+		println("Prolog failure ASC")
 }
 
-Robot plexiBox QActor driverobot context ctxDriveRobot 
+Robot senseBot QActor driverobot context ctxDriveRobot 
 {
 	Plan init normal
 		println("driverobot starts");
 		solve consult("talkTheory.pl") time(0) onFailSwitchTo prologFailure;
+		println("consulting driveRobotTheory");
 		solve consult("driveRobotTheory.pl") time(0) onFailSwitchTo prologFailure;
+		println("consulted driveRobotTheory");
 		switchToPlan receiveFirstCommand
 		
 	Plan receiveFirstCommand
+		println("ROBOT waiting first message");
 		receiveMsg time(600000) react event obstacle -> detect;
 		//Save first sender
 		[?? msg(drive,dispatch, S, R, drive(X), N)] solve assert(firstSender(S)) time(0);
@@ -112,7 +115,9 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		robotStop speed(100) time(1000);
 		emit bagFound : bagFound;
 		println("Starting detection Phase...");
+		delay time ( 10000);
 		[!? detection(X) ] forward asc -m detectionResults : detectionResults(X);
+		delay time ( 10000);
 		println("Detection Results Sent");
 		emit endDetection : endDetection;
 		println("Back to base");
@@ -125,8 +130,8 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 	Plan finish
 		println("DriveRobot ends")
 		
-	Plan prologFailure resumeLastPlan
-		println("Failed to load prolog theories")
+	Plan prologFailure
+		println("Robot Failed to load prolog theories")
 		
 	Plan savemoveFailure resumeLastPlan
 		println("Failed save move")

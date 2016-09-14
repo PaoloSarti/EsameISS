@@ -32,6 +32,21 @@ motors = Actuators [ motorleft , motorright  ] private position: BOTTOM
 Mainrobot mock  [ motors,rot ]      
 ; 
 
+/*
+ * senseBot
+ * 
+ */
+
+RobotBase senseBot 
+//BASIC                          
+motorleft  = Motor  [ gpiomotor pincw 16 pinccw 5  ]  position: LEFT
+motorright = Motor  [ gpiomotor pincw 0 pinccw 4  ]  position: RIGHT
+distanceRadar = Distance  [ sonarhcsr04 pintrig 22 pinecho 21 ]  position: FRONT_TOP
+//line = Line   [ gpioswitch pin 15 activelow ]  position: BOTTOM 
+//COMPOSED
+motors = Actuators [ motorleft , motorright  ] private position: BOTTOM
+Mainrobot senseBot  [ motors ]   
+; 
 
 /*
  * --------------------------------------------
