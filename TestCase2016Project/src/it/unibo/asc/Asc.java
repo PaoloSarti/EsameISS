@@ -62,6 +62,7 @@ public class Asc extends AbstractAsc {
 	public void loadResults(String image){
 		results.setImage(image);
 		alarm.setEnabled(true);
+		userMsg.setText("Results received");
 		((Frame) env).validate();
 	}
 	
@@ -70,6 +71,7 @@ public class Asc extends AbstractAsc {
 		super.execAction(cmd);
 		if( cmd.equals("Alarm") ){
 			platform.raiseEvent("input", "local_alarm", "local_alarm");
+			userMsg.setText("Alarm sent!");
 			return;
 		}
 	}
