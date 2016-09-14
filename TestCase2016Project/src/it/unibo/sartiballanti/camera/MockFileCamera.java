@@ -1,13 +1,8 @@
 package it.unibo.sartiballanti.camera;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import javax.imageio.ImageIO;
 
 public class MockFileCamera implements ICamera {
 
@@ -26,5 +21,4 @@ public class MockFileCamera implements ICamera {
 		}
 		return null;
 	}
-
 }
