@@ -381,11 +381,10 @@ The operator console consists of a GUI that translates external input events in 
 %inserire qui listato GUI operator console
 The ASC console is a GUI that shows the image received from the robot at the end of the detection phase and then shows a button that emits the alarm if pressed.
 %inserire qui listato GUI ASC console
-The robot uses a Prolog theory to execute the detection phase. It takes a picture of the bag (in our implementation, it simulates this behaviour) and sends it to the ASC. Some Java library have to be called to convert the image as a string and vice versa.
-%inserire prolog per la detection
+The robot uses a Prolog theory to execute the detection phase. It takes a picture of the bag (in our implementation, it simulates this behaviour) and sends it to the ASC. Some Java library has to be called to convert the image as a string and vice versa.\\
 Another Prolog theory is used to implement a simple algorithm to come back autonomously: the robot memorizes every move it makes in the first phase, so it can come back executing the same moves backwards.
-%inserire prolog per tornare a casa
-%\lstinputlisting[language=ddr, frame=single]{../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl}
+%inserire prolog per il robot
+\lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl}
 
 %===========================================================================
 

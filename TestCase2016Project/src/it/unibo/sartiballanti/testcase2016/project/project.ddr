@@ -9,9 +9,9 @@ Event obstacle : obstacle(X)
 Event bagFound : bagFound
 Event endDetection : endDetection
 
-Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
-Context ctxOperator ip[host="192.168.1.2" port=8015]
-Context ctxASC ip[host="192.168.1.2" port=8020]
+Context ctxDriveRobot ip[host="localhost" port=8010]
+Context ctxOperator ip[host="localhost" port=8015]
+Context ctxASC ip[host="localhost" port=8020]
 
 QActor led context ctxDriveRobot 
 {	
@@ -72,7 +72,7 @@ QActor asc context ctxASC -g green
 		onEvent local_alarm : local_alarm -> emit alarm : alarm
 }
 
-Robot mock QActor driverobot context ctxDriveRobot 
+Robot plexiBox QActor driverobot context ctxDriveRobot 
 {
 	Plan init normal
 		println("driverobot starts");
@@ -82,21 +82,19 @@ Robot mock QActor driverobot context ctxDriveRobot
 		
 	Plan receiveFirstCommand
 		receiveMsg time(600000) react event obstacle -> detect;
-		memoCurrentMessage;
 		//Save first sender
-		[!? msg(drive,dispatch, S, R, drive(X), N)] solve assert(firstSender(S)) time(0);
-		onMsg drive : drive(X) -> solve savemove(X) time(0);
-		onMsg drive : drive(X) -> solve X time(0);
+		[?? msg(drive,dispatch, S, R, drive(X), N)] solve assert(firstSender(S)) time(0);
+		onMsg drive : drive(X) -> solve savemove(X) time(0) onFailSwitchTo prologFailure;
+		onMsg drive : drive(X) -> solve X time(0) onFailSwitchTo prologFailure;
 		onMsg drive : drive(X) -> switchToPlan drive;
 		repeatPlan 0
 	
 	Plan drive 
 		receiveMsg time(600000) react event obstacle -> detect;
-		memoCurrentMessage;
 		//To make sure that the sender is the same as the first one
-		[!? msg(drive,dispatch, S, R, drive(X), N)] solve firstSender(S) time(0) onFailSwitchTo drive;
-		onMsg drive : drive(X) -> solve savemove(X) time(0);
-		onMsg drive : drive(X) -> solve X time(0);
+		[?? msg(drive,dispatch, S, R, drive(X), N)] solve firstSender(S) time(0) onFailSwitchTo drive;
+		onMsg drive : drive(X) -> solve savemove(X) time(0) onFailSwitchTo prologFailure;
+		onMsg drive : drive(X) -> solve X time(0) onFailSwitchTo prologFailure;
 		repeatPlan 0
 		
 	Plan detect
