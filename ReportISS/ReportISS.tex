@@ -271,11 +271,12 @@ In this phase we try to find an agreement with the client on what the entities m
 \item \textbf{Differential drive robot}
 \end{itemize}
 A \textbf{console} is a physical or virtual device that allows communication between the system and an external entity. It can get user input data and send them to the system, show some system output data to the user or both. In this case, the operator's console can get input from the operator and the Airport Security Center's console can receive the detection results and emit an alarm signal.
-\\A \textbf{differential drive robot} is a composed entity that is able to use some devices to perform actions and receive data from the environment. It can also communicate with other parts of the system. All differential drive robots must have a sonar and are able to move in the environment. In this case, the differential drive robot has DC motors and wheels to move, a sonar and a led.
-DC motors, wheels, led and sonar are the hardware components mounted on the robot.
+\\A \textbf{differential drive robot} is a composed entity that is able to use some devices to perform actions and receive data from the environment. It can also communicate with other parts of the system. All differential drive robots must have a sonar and are able to move in the environment. In this case, the differential drive robot has DC motors and wheels to move, a sonar, a led and a camera.
+DC motors, wheels, led, sonar and camera are the hardware components mounted on the robot.
 \\A \textbf{DC motor} can spin the attached wheel clockwise or counter-clockwise.
 \\A \textbf{led} can be turned on or off.
-\\A \textbf{sonar} can send an ultrasonic signal (trigger) and generates a corresponding response waveform (echo). The waveform analysis allows to estimate the distance from an obstacle.\\ \\
+\\A \textbf{sonar} can send an ultrasonic signal (trigger) and generates a corresponding response waveform (echo). The waveform analysis allows to estimate the distance from an obstacle.
+\\ A \textbf{camera} is a device that can take photos when requested. It will be used by the robot in the detection phase.\\ \\
 The system can be formally defined with a custom language / executable meta-model developed by our software house. It allows us to describe what are the parts of the system, how they interact with each other and their behaviour. \\ \\
 The following is a first description of the system obtained by the requirement analysis:
 %inserire qui il listato .ddr di analisi dei requisiti
@@ -297,6 +298,7 @@ In the detection phase, the robot inspects the bag. We'll test the following:
 \begin{itemize}
 \item the robot stops and ignores commands from the operator
 \item the robot starts blinking after it stopped
+\item the robot can take a picture of the bag
 \item the robot can send the results to the Airport Security Center
 \item the Airport Security Center can receive the results of the inspection
 \item the robot stops blinking at the end of this phase
@@ -329,6 +331,7 @@ The \textbf{DriveRobot} receives commands from the Operator Interface in the fir
 The \textbf{Operator Interface} receives commands from the operator as events and sends the corresponding commands to the robot.\\
 The \textbf{ASCConsole} receives the detection results from the detection phase and then enables the Airport Security Center to emit the alarm.\\
 We decided to introduce the \textbf{led} as an active entity separated from the robot because it is an active entity that has to intecract with other entities and has its own behaviour, modeling it as a passive object managed by the robot is inappropriate. The led starts to blink when the detection phase begins, stops to blink when the detection phase ends and it starts to blink if the alarm is emitted when the robot is coming back.\\
+The \textbf{camera} will be modeled as a passive entity that can only take a picture when the robot asks for it.\\
 The interaction with external entities (the operator and the ASC) have been modeled as local events.
 \subsection{Abstraction gap}
 The abstraction gap is the distance between the concepts used to model the problem and those implied by the technology of choice. Thanks to the framework provided, executable code is generated from the model defined in the ddr meta-model. Thus, adopting this framework allows the application designers to use an extremely high-level description of the problem, closer to the application domain, reducing considerably the abstraction gap. The specific technology to be used can be decided later, in a configuration phase. The advantage of using a meta-model and a code generator is also that it can be extended to support more advanced concepts.
@@ -362,30 +365,32 @@ We also need to decide which platforms will be used by the operator and the Airp
 \labelsec{Project}
 %===========================================================================
 \subsection{Structure}
-The structure is essentially the same as the logic architecture.
+The structure is essentially the same as the logic architecture. Our robot has no camera, so we'll implement it as a mock device.
 \subsection{Interaction}
 There are no significant changes from the logic architecture.
 \subsection{Behavior}
 More details have been added to implement the missing features described in the work plan.\\
 The consoles used by the ASC and the operator will be GUIs that allow them to interact with the system.
 The robot behaviour has slightly changed in the first phase: to ensure it receives messages from a single source, it memorizes the sender of the first received drive message and accepts new drive commands from that source only.
-The detection logic will be simulated, because the robot we built can't collect meaningful information about the bag.
 \lstinputlisting[language=ddr, frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/project.ddr}
 
 %===========================================================================
 \section{Implementation}
 \labelsec{Implementation}
-The \textbf{led} blinking logic is implemented directly as QActor behaviour. The Prolog theory turnTheLed(X) allows the QActor to manage the led and actually turn it on and off.
+The \textbf{led} blinking logic is implemented directly as QActor behaviour. The Prolog theory turnTheLed/1 allows the QActor to manage the led and actually turn it on and off calling Pi4j.
 \lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/led/ledTheory.pl}
-The \textbf{operator console} includes a GUI that translates external input events in messages to drive the robot.
+The \textbf{operator console} includes a GUI that translates external input events into messages to drive the robot.
 \lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/operator/Operator.java}
 The \textbf{ASC console} includes a GUI that shows the image received from the robot at the end of the detection phase and then shows a button that emits the alarm if pressed.
-%inserire qui listato GUI ASC console
 \lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/asc/Asc.java}
-The \textbf{robot} uses a Prolog theory to execute the detection phase. It takes a picture of the bag (in our implementation, it simulates this behaviour) and sends it to the ASC. Some Java library has to be called to convert the image as a string and vice versa.\\
-Another Prolog theory is used to implement a simple algorithm to come back autonomously: the robot memorizes every move it makes in the first phase, so it can come back executing the same moves backwards.\\
-This is the Prolog theory that implements the robot functionalities:
+The \textbf{robot} uses a Prolog theory to execute the detection phase. It takes a picture of the bag using the simulated \textbf{camera} and sends it to the ASC.\\
+The camera implements the following interface:
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/camera/ICamera.java}
+This is the implementation of the mock camera:
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/camera/MockFileCamera.java}
+The \textbf{driveRobotTheory} is used to manage the camera and to implement a simple algorithm to come back autonomously: the robot memorizes every move it makes in the first phase, so it can come back executing the same moves backwards.\\
 \lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl}
+
 
 %===========================================================================
 
