@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import rx.Single;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 public class MockFileCamera implements ICamera {
 
 	private String imgPath;
@@ -20,5 +24,17 @@ public class MockFileCamera implements ICamera {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	public void observableTakePhoto(Action1<? super byte[]> onPhotoTaken) {
+		
+		Single.<byte[]>create(sub->{
+			try {
+				sub.onSuccess(Files.readAllBytes(Paths.get(imgPath)));
+			} catch (IOException e) {
+				sub.onError(e);
+			}
+		}).subscribeOn(Schedulers.io()).subscribe(onPhotoTaken);
 	}
 }

@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/blsHL.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/blsProxy.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/2p301.jar"/>
+	<classpathentry kind="lib" path="lib/rxjava-1.1.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

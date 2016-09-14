@@ -4,18 +4,12 @@ This code is generated only ONCE
 */
 package it.unibo.operator;
 import java.awt.Button;
-import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import it.unibo.baseEnv.basicFrame.EnvFrame;
@@ -75,15 +69,12 @@ public class Operator extends AbstractOperator {
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 			}	
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 			}
 		};
 		
@@ -109,8 +100,6 @@ public class Operator extends AbstractOperator {
 		((EnvFrame) env).add(p);
 		((EnvFrame) env).validate();
 	}
-	
-	
 
 	@Override
 	public void execAction(String cmd) {
