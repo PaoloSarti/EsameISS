@@ -7,15 +7,17 @@
 %The savemove/1 rule uses the knowledge base to store and update the information,
 %but it uses savemove/5 to get the updated lastMove and moveList.
 
+%Initial facts
 moveList([]).
 lastMove(none,0).
 
 savemove(executeInput(CUR)):-
 	moveList(L),
+	lastMove(LASTMOVE,MVTIME),
 	savemove(CUR,lastMove(LASTMOVE,MVTIME),L,NEWLASTMOVE,NEWL),
-	retract(lastMove(LASTMOVE,MVTIME)),
+	retract(lastMove(_,_)),
+	retract(moveList(_)),
 	assert(NEWLASTMOVE),
-	retract(moveList(L)),
 	assert(moveList(NEWL)).
 
 %Here the savemove rule is implemented without assert and retract.

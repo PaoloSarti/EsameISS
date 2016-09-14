@@ -13,6 +13,6 @@
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/uniboInterfaces.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/unibonoawtsupports.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/uniboQactorRobot.jar"/>
-	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/tuprolog.jar"/>
+	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/2p301.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

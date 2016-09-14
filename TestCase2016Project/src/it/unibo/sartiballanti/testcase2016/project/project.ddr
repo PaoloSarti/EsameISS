@@ -103,7 +103,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		robotStop speed(100) time(1000);
 		emit bagFound : bagFound;
 		println("Starting detection Phase...");
-		[?? detection(X) ] forward asc -m detectionResults : detectionResults(X);
+		[!? detection(X) ] forward asc -m detectionResults : detectionResults(X);
 		println("Detection Results Sent");
 		emit endDetection : endDetection;
 		println("Back to base");
