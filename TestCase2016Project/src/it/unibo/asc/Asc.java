@@ -23,7 +23,7 @@ public class Asc extends AbstractAsc {
 	
 	protected Label userMsg;
 	protected Button alarm;
-	protected MyPanel results;
+	protected ImagePanel results;
 	
 	@Override
 	protected void addCmdPanels(){
@@ -34,7 +34,7 @@ public class Asc extends AbstractAsc {
 		l.setColumns(2);
 		l.setRows(2);
 		((Frame) env).setLayout(l);
-		results = new MyPanel();
+		results = new ImagePanel();
 		results.setSize(300, 400);
 		((Frame) env).add(results);
 		alarm = new Button("Alarm");
@@ -70,14 +70,14 @@ public class Asc extends AbstractAsc {
 		}
 	}
 	
-	protected class MyPanel extends Panel{
+	protected class ImagePanel extends Panel{
 		 /**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 		private Image image;
 		 
-		 public MyPanel(){
+		 public ImagePanel(){
 			 image = null;
 		 }
 		 

@@ -52,6 +52,10 @@ revMove(move(mr,X,Y,Z),move(ml,X,Y,Z)).
 revMove(move(ml,X,Y,Z),move(mr,X,Y,Z)).
 revMove(move(h,X,Y,Z),move(h,X,Y,Z)).
 
+%TODO
+detection(X).
+
+
 initDriveRobotTheory.
 	%actorobj(Actor),
 	%( Actor <- isSimpleActor returns R, R=true, !,

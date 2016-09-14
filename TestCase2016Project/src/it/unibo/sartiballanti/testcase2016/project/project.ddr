@@ -64,12 +64,16 @@ QActor asc context ctxASC -g green
 		
 	Plan work
 		receiveMsg time(600000);
-		onMsg detectionResults : detectionResults(X) -> println(detectionResults(X));
+		onMsg detectionResults : detectionResults(X) -> 
+		solve actorOp(loadResults(X)) time(0) onFailSwitchTo prologFailure;
 		switchToPlan senseAlarm
 		
 	Plan senseAlarm
 		sense time(100000) local_alarm -> continue;
 		onEvent local_alarm : local_alarm -> emit alarm : alarm
+		
+	Plan prologFailure resumeLastPlan
+		println("Prolog failure")
 }
 
 Robot plexiBox QActor driverobot context ctxDriveRobot 
@@ -95,6 +99,8 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		[?? msg(drive,dispatch, S, R, drive(X), N)] solve firstSender(S) time(0) onFailSwitchTo drive;
 		onMsg drive : drive(X) -> solve savemove(X) time(0) onFailSwitchTo prologFailure;
 		onMsg drive : drive(X) -> solve X time(0) onFailSwitchTo prologFailure;
+		//[!? moveList(X)] println(moveList(X));	//DEBUG
+		//[!? lastMove(X,Y)] println(lastMove(X,Y));	//DEBUG
 		repeatPlan 0
 		
 	Plan detect

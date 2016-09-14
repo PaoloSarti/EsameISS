@@ -18,5 +18,5 @@ turnTheLed( off ):-
 initialize
 ------------------------------------------------------------
 */
-initialize  :-   createPi4jLed(24).
+initialize  :-   createPi4jLed(25).
 :- initialization(initialize).
