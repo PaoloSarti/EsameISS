@@ -4,7 +4,6 @@ This code is generated only ONCE
 */
 package it.unibo.asc;
 import java.awt.*;
-import java.awt.image.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -14,7 +13,6 @@ import javax.imageio.ImageIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import it.unibo.baseEnv.basicFrame.EnvFrame;
 import it.unibo.is.interfaces.IOutputEnvView;
 import it.unibo.qactors.ActorContext;
 
@@ -44,11 +42,7 @@ public class Asc extends AbstractAsc {
 		alarm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					emit("alarm", "alarm");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+					execAction("Alarm");
 			}
 		});
 		alarm.setEnabled(false);
@@ -77,7 +71,11 @@ public class Asc extends AbstractAsc {
 	}
 	
 	protected class MyPanel extends Panel{
-		 private Image image;
+		 /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private Image image;
 		 
 		 public MyPanel(){
 			 image = null;
@@ -101,7 +99,6 @@ public class Asc extends AbstractAsc {
 		        try {
 					image = ImageIO.read(new ByteArrayInputStream(imageBytes));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					System.out.println("MyPanel: Image error!");
 					e.printStackTrace();
 				}
