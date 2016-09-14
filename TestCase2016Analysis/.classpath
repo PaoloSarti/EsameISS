@@ -7,12 +7,12 @@
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/http/nanoHTTPD.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/json/android-json.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/pi4j/pi4j-core.jar"/>
-	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/2p301.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/labbaseRobotSam.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/qactors18.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/uniboEnvBaseAwt.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/uniboInterfaces.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/unibonoawtsupports.jar"/>
 	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/uniboQactorRobot.jar"/>
+	<classpathentry kind="lib" path="/it.unibo.iss.libs/libs/unibo/tuprolog.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -6,6 +6,10 @@
 
 %The savemove/1 rule uses the knowledge base to store and update the information,
 %but it uses savemove/5 to get the updated lastMove and moveList.
+
+moveList([]).
+lastMove(none,0).
+
 savemove(executeInput(CUR)):-
 	moveList(L),
 	savemove(CUR,lastMove(LASTMOVE,MVTIME),L,NEWLASTMOVE,NEWL),
@@ -46,12 +50,10 @@ revMove(move(mr,X,Y,Z),move(ml,X,Y,Z)).
 revMove(move(ml,X,Y,Z),move(mr,X,Y,Z)).
 revMove(move(h,X,Y,Z),move(h,X,Y,Z)).
 
-initDriveRobotTheory  :-  
-	actorobj(Actor),
-	assert(moveList([])),
-	assert(lastMove(none,0)),
-	( Actor <- isSimpleActor returns R, R=true, !,
-	  actorPrintln(" *** driveRobotTheory Loaded  ***  ");
-	).
+initDriveRobotTheory.
+	%actorobj(Actor),
+	%( Actor <- isSimpleActor returns R, R=true, !,
+	%  actorPrintln(" *** driveRobotTheory Loaded  ***  ");
+	%).
 
 :- initialization(initDriveRobotTheory).

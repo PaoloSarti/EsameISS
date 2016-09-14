@@ -84,7 +84,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		receiveMsg time(600000) react event obstacle -> detect;
 		//Save first sender
 		[?? msg(drive,dispatch, S, R, drive(X), N)] solve assert(firstSender(S)) time(0);
-		onMsg drive : drive(X) -> solve savemove(X) time(0) onFailSwitchTo prologFailure;
+		onMsg drive : drive(X) -> solve savemove(X) time(0) onFailSwitchTo savemoveFailure;
 		onMsg drive : drive(X) -> solve X time(0) onFailSwitchTo prologFailure;
 		onMsg drive : drive(X) -> switchToPlan drive;
 		repeatPlan 0
@@ -118,4 +118,8 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		
 	Plan prologFailure resumeLastPlan
 		println("Failed to load prolog theories")
+		
+	Plan savemoveFailure resumeLastPlan
+		println("Failed save move")
+	
 }

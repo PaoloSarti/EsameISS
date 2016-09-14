@@ -26,8 +26,6 @@ public class Operator extends AbstractOperator {
 	
 	protected Map<String, String> driveCmdMap;
 	
-	protected List<String> driveCmdsSorted;
-	
 	public final static String Forward="Forward";
 	public final static String Backward="Backward";
 	public final static String Right="Right";
@@ -45,12 +43,6 @@ public class Operator extends AbstractOperator {
 		driveCmdMap.put(Right, "executeInput(move(mr,100,0))");
 		driveCmdMap.put(Left, "executeInput(move(ml,100,0))");
 		driveCmdMap.put(Halt, "executeInput(move(h,100,0))");
-//		driveCmdsSorted=new ArrayList<>();
-//		driveCmdsSorted.add(Forward);
-//		driveCmdsSorted.add(Backward);
-//		driveCmdsSorted.add(Left);
-//		driveCmdsSorted.add(Right);
-//		driveCmdsSorted.add(Halt);
 	}
 	
 	@Override
@@ -59,10 +51,7 @@ public class Operator extends AbstractOperator {
 	
 	@Override
 	protected void addCmdPanels(){
-		//super.addCmdPanels();
 		initCmdMap();
-		//((EnvFrame) env).removeAll();
-		//((EnvFrame) env).setLayout(new FlowLayout());
 		((EnvFrame) env).setSize(800,700);
 		Panel p = new Panel();
 		GridLayout l =  new GridLayout();
