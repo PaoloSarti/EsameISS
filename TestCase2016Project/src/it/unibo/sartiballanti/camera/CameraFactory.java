@@ -18,5 +18,4 @@ public class CameraFactory {
 	public ICamera getCamera(){
 		return new MockFileCamera(mockFilePath);
 	}
-	
 }

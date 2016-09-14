@@ -53,8 +53,16 @@ public class Asc extends AbstractAsc {
 	}
 	
 	//this is called when the results are received
-	public void loadResults(String image){
-		results.setImage(image);
+	public void loadResults(String imageString){
+        byte[] imageBytes = Base64.getDecoder().decode(imageString);
+        try {
+			Image image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+			results.setImage(image);
+		} catch (IOException e) {
+			System.out.println("MyPanel: Image error!");
+			e.printStackTrace();
+		}
+
 		alarm.setEnabled(true);
 		userMsg.setText("Results received");
 		((Frame) env).validate();
@@ -94,14 +102,8 @@ public class Asc extends AbstractAsc {
 		        }
 		    }
 		 
-		 public void setImage(String imageString){
-		        byte[] imageBytes = Base64.getDecoder().decode(imageString);
-		        try {
-					image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-				} catch (IOException e) {
-					System.out.println("MyPanel: Image error!");
-					e.printStackTrace();
-				}
+		 public void setImage(Image image){
+			 	this.image=image;
 		        validate();
 		 }
 	}
