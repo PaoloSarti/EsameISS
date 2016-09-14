@@ -28,7 +28,6 @@ public class MockFileCamera implements ICamera {
 	
 	@Override
 	public void observableTakePhoto(Action1<? super byte[]> onPhotoTaken) {
-		
 		Single.<byte[]>create(sub->{
 			try {
 				sub.onSuccess(Files.readAllBytes(Paths.get(imgPath)));

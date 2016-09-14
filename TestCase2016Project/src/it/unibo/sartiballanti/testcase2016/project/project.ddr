@@ -17,21 +17,21 @@ QActor led context ctxDriveRobot
 {	
 	Plan init normal
 		println("Led starts");
-		solve consult("ledTheory.pl") time(0); 
+		solve consult("ledTheory.pl") time(0) onFailSwitchTo prologFailure; 
 		switchToPlan senseStartBlink
 		
 	Plan senseStartBlink
-		println("Led Off");
-		solve turnTheLed(off) time(0);
+		//println("Led Off");
+		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
 		sense time(60000) bagFound -> startBlinking;
 		repeatPlan 0
 		
 	Plan startBlinking
 		println("led On");
-		solve turnTheLed(on) time(0);
+		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
 		delay time(1000) react event endDetection -> senseAlarm;
 		println("Led Off");
-		solve turnTheLed(off) time(0);
+		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
 		delay time(1000) react event endDetection -> senseAlarm;
 		repeatPlan 0
 		
@@ -40,6 +40,9 @@ QActor led context ctxDriveRobot
 		solve turnTheLed(off) time(0);
 		sense time(60000) alarm-> startBlinking;
 		repeatPlan 0
+		
+	Plan prologFailure
+		println("Prolog Failure")
 }
 
 QActor operator context ctxOperator -g cyan
@@ -116,7 +119,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		switchToPlan backToBase
 		
 	Plan backToBase
-		solve backToBase time(0);	//It doesn't need to react, as the qactor led handles that
+		solve backToBase time(0) onFailSwitchTo prologFailure;	//It doesn't need to react, as the qactor led handles that
 		switchToPlan finish
 		
 	Plan finish

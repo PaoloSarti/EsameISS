@@ -58,7 +58,10 @@ public class Operator extends AbstractOperator {
 		MouseListener ml =new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				execAction(Halt);
+				String cmd = ((Button)e.getSource()).getLabel();
+				if(!cmd.equals(Halt)){
+					execAction(Halt);
+				}
 				System.out.println("DEBUG: UNPRESSED");
 			}
 			@Override
