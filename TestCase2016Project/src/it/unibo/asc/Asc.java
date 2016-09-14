@@ -3,10 +3,16 @@
 This code is generated only ONCE
 */
 package it.unibo.asc;
-import java.awt.Button;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Panel;
+import java.awt.*;
+import java.awt.image.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Base64;
+
+import javax.imageio.ImageIO;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import it.unibo.baseEnv.basicFrame.EnvFrame;
 import it.unibo.is.interfaces.IOutputEnvView;
@@ -17,16 +23,46 @@ public class Asc extends AbstractAsc {
 		super(actorId, myCtx, outEnvView);
 	}
 	
+	protected Label userMsg;
+	protected Button alarm;
+	protected MyPanel results;
 	
 	@Override
 	protected void addCmdPanels(){
 		//super.addCmdPanels();
 		//photo panel
-		Panel results = new Panel();
+		((Frame) env).removeAll();
+		GridLayout l = new GridLayout();
+		l.setColumns(2);
+		l.setRows(2);
+		((Frame) env).setLayout(l);
+		results = new MyPanel();
 		results.setSize(300, 400);
-		((Frame) env).setLayout(new FlowLayout());
 		((Frame) env).add(results);
-		((EnvFrame) env).addCmdPanel("Alarm", new String[]{"Alarm"}, this);
+		alarm = new Button("Alarm");
+		alarm.setBackground(Color.red);
+		alarm.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					emit("alarm", "alarm");
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		alarm.setEnabled(false);
+		((Frame) env).add(alarm);
+		userMsg = new Label("Waiting for results");
+		((Frame) env).add(userMsg);
+		((Frame) env).validate();
+	}
+	
+	//this is called when the results are received
+	public void loadResults(String image){
+		results.setImage(image);
+		alarm.setEnabled(true);
+		((Frame) env).validate();
 	}
 	
 	@Override
@@ -37,4 +73,38 @@ public class Asc extends AbstractAsc {
 			return;
 		}
 	}
+	
+	protected class MyPanel extends Panel{
+		 private Image image;
+		 
+		 public MyPanel(){
+			 image = null;
+		 }
+		 
+		 public void paint(Graphics g){
+		        super.paint(g);
+		        if(image != null){
+		        	int w = getWidth();
+			        int h = getHeight();
+			        int imageWidth = image.getWidth(this);
+			        int imageHeight = image.getHeight(this);
+			        int x = (w - imageWidth)/2;
+			        int y = (h - imageHeight)/2;
+			        g.drawImage(image, x, y, this);
+		        }
+		    }
+		 
+		 public void setImage(String imageString){
+		        byte[] imageBytes = Base64.getDecoder().decode(imageString.getBytes());
+		        try {
+					image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.out.println("MyPanel: Image error!");
+					e.printStackTrace();
+				}
+		        validate();
+		 }
+	}
+	
 }

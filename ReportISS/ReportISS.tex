@@ -375,15 +375,16 @@ The detection logic will be simulated, because the robot we built can't collect 
 %===========================================================================
 \section{Implementation}
 \labelsec{Implementation}
-The led blinking logic is implemented directly as QActor behaviour. The Prolog theory turnTheLed(X) allows the QActor to manage the led and actually turn it on and off.
-%inserire qui listato per implementazione del led
-The operator console consists of a GUI that translates external input events in messages to drive the robot.
-%inserire qui listato GUI operator console
-The ASC console is a GUI that shows the image received from the robot at the end of the detection phase and then shows a button that emits the alarm if pressed.
+The \textbf{led} blinking logic is implemented directly as QActor behaviour. The Prolog theory turnTheLed(X) allows the QActor to manage the led and actually turn it on and off.
+\lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/led/ledTheory.pl}
+The \textbf{operator console} includes a GUI that translates external input events in messages to drive the robot.
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/operator/Operator.java}
+The \textbf{ASC console} includes a GUI that shows the image received from the robot at the end of the detection phase and then shows a button that emits the alarm if pressed.
 %inserire qui listato GUI ASC console
-The robot uses a Prolog theory to execute the detection phase. It takes a picture of the bag (in our implementation, it simulates this behaviour) and sends it to the ASC. Some Java library has to be called to convert the image as a string and vice versa.\\
-Another Prolog theory is used to implement a simple algorithm to come back autonomously: the robot memorizes every move it makes in the first phase, so it can come back executing the same moves backwards.
-%inserire prolog per il robot
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/asc/Asc.java}
+The \textbf{robot} uses a Prolog theory to execute the detection phase. It takes a picture of the bag (in our implementation, it simulates this behaviour) and sends it to the ASC. Some Java library has to be called to convert the image as a string and vice versa.\\
+Another Prolog theory is used to implement a simple algorithm to come back autonomously: the robot memorizes every move it makes in the first phase, so it can come back executing the same moves backwards.\\
+This is the Prolog theory that implements the robot functionalities:
 \lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl}
 
 %===========================================================================
