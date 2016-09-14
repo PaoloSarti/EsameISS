@@ -53,13 +53,10 @@ revMove(move(ml,X,Y,Z),move(mr,X,Y,Z)).
 revMove(move(h,X,Y,Z),move(h,X,Y,Z)).
 
 %TODO
-detection(X).
-
+detection(X):-
+	actorOp(takeStringifiedPhoto),
+	actorOpDone(takeStringifiedPhoto,X).
 
 initDriveRobotTheory.
-	%actorobj(Actor),
-	%( Actor <- isSimpleActor returns R, R=true, !,
-	%  actorPrintln(" *** driveRobotTheory Loaded  ***  ");
-	%).
 
 :- initialization(initDriveRobotTheory).

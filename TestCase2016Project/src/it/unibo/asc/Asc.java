@@ -95,7 +95,7 @@ public class Asc extends AbstractAsc {
 		    }
 		 
 		 public void setImage(String imageString){
-		        byte[] imageBytes = Base64.getDecoder().decode(imageString.getBytes());
+		        byte[] imageBytes = Base64.getDecoder().decode(imageString);
 		        try {
 					image = ImageIO.read(new ByteArrayInputStream(imageBytes));
 				} catch (IOException e) {
