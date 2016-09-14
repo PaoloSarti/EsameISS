@@ -3,6 +3,9 @@ package it.unibo.sartiballanti.camera;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 
@@ -15,9 +18,9 @@ public class MockFileCamera implements ICamera {
 	}
 	
 	@Override
-	public BufferedImage takePhoto() {
+	public byte[] takePhoto() {
 		try {
-			return ImageIO.read(new File(imgPath));
+			return Files.readAllBytes(Paths.get(imgPath));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
