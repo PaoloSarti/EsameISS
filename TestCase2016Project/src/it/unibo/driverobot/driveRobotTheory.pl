@@ -39,7 +39,7 @@ backToBase:-
 
 backToBase([]).
 
-backToBase([H,T]):-
+backToBase([H|T]):-
 	revMove(H,RH),
 	executeInput(RH),
 	backToBase(T).

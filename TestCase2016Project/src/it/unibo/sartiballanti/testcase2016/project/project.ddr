@@ -9,9 +9,9 @@ Event obstacle : obstacle(X)
 Event bagFound : bagFound
 Event endDetection : endDetection
 
-Context ctxDriveRobot ip[host="192.168.43.162" port=8010]
-Context ctxOperator ip[host="192.168.43.159" port=8015]
-Context ctxASC ip[host="192.168.43.159" port=8020]
+Context ctxDriveRobot ip[host="localhost" port=8010]
+Context ctxOperator ip[host="localhost" port=8015]
+Context ctxASC ip[host="localhost" port=8020]
 
 QActor led context ctxDriveRobot 
 {	
@@ -79,6 +79,16 @@ QActor asc context ctxASC -g green
 		println("Prolog failure ASC")
 }
 
+/*
+ QActor obstacleemitter context ctxDriveRobot 
+{
+	Plan init normal
+		delay time(15000);
+		emit obstacle : obstacle(12);
+		println("Emitted obstacle event")
+}
+*/
+
 Robot senseBot QActor driverobot context ctxDriveRobot 
 {
 	Plan init normal
@@ -113,7 +123,9 @@ Robot senseBot QActor driverobot context ctxDriveRobot
 		
 	Plan detect
 		println("Stopping...");
-		solve endSavemoves time(0);
+		solve endSavemoves time(0) onFailSwitchTo prologFailure;
+		[!? moveList(X)] println(moveList(X));	//DEBUG
+		[!? lastMove(X,Y)] println(lastMove(X,Y));	//DEBUG
 		robotStop speed(100) time(1000);
 		emit bagFound : bagFound;
 		println("Starting detection Phase...");
