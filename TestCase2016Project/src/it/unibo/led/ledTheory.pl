@@ -11,12 +11,6 @@
 %	class("it.unibo.devices.qa.DeviceLedPi4jQa") <- getTheLed  returns LED,
 %	LED <- turnOff .
 
-%turnTheLed(on):-
-%	class("it.unibo.sartiballanti.utils.Utils") <- executeShellCommand("sudo bash/gpioPinOn.sh 25").
-	
-%turnTheLed(off):-
-%	class("it.unibo.sartiballanti.utils.Utils") <- executeShellCommand("sudo bash/gpioPinOff.sh 25").
-
 pinNum(26).
 
 turnTheLed(on):-
