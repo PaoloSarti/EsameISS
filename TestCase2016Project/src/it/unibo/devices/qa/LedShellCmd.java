@@ -4,8 +4,8 @@ import it.unibo.sartiballanti.utils.Utils;
 
 public class LedShellCmd implements ILed{
 
-	private String command;
-	private int nPin;	//BCM
+	protected String command;
+	protected int nPin;	//BCM
 	
 	public LedShellCmd(String command, int nPin) {
 		super();

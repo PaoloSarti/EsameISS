@@ -8,6 +8,7 @@ public class LedDevicesFactory {
 	private static Map<Integer, ILed> leds;
 	
 	private static String command="sudo bash/gpioPin.sh";
+	private static String commandInterpreter="sudo bash/gpioPinInterpreter.sh";
 	
 	static {
 		leds = new HashMap<>();
@@ -22,6 +23,14 @@ public class LedDevicesFactory {
 			return leds.get(nPin);
 		}
 		leds.put(nPin, new LedShellCmd(command, nPin));
+		return leds.get(nPin);
+	}
+	
+	public static ILed getTheLedCmdInterpreter(int nPin){
+		if(leds.containsKey(nPin)){
+			return leds.get(nPin);
+		}
+		leds.put(nPin, new LedShellCmdInterpreter(command, nPin));
 		return leds.get(nPin);
 	}
 	
