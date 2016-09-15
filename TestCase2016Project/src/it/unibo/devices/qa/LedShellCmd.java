@@ -1,7 +1,5 @@
 package it.unibo.devices.qa;
 
-import java.io.IOException;
-
 import it.unibo.sartiballanti.utils.Utils;
 
 public class LedShellCmd implements ILed{
@@ -17,12 +15,12 @@ public class LedShellCmd implements ILed{
 
 	@Override
 	public void turnOn() {
-		Utils.executeShellCommand(command.replace("X", "On")+" "+nPin);
+		Utils.executeShellCommand(command+" "+nPin+" "+0);
 	}
 
 	@Override
 	public void turnOff() {
-		Utils.executeShellCommand(command.replace("X", "Off")+" "+nPin);
+		Utils.executeShellCommand(command+" "+nPin+" "+1);
 	}
 	
 	

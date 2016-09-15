@@ -9,7 +9,7 @@ public class LedDevicesFactory {
 	
 	private static Map<Integer, ILed> leds;
 	
-	private static String command="./bash/gpioPinX.sh";
+	private static String command="./bash/gpioPin.sh";
 	
 	
 	static {
