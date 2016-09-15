@@ -1,9 +1,7 @@
-
-createPi4jLed( PinNum)  :-
+createPi4jLed( PinNum) :-
  	actorobj( Actor ),
   	Actor <- getOutputEnvView returns OutView ,	
 	class("it.unibo.devices.qa.DeviceLedPi4jQa") <- createLed( OutView, PinNum ) returns LED.
-	
 	
 turnTheLed( on ):-
 	class("it.unibo.devices.qa.DeviceLedPi4jQa") <- getTheLed  returns LED,
@@ -25,6 +23,6 @@ turnTheLed( off ):-
 */
 initialize  :-   createPi4jLed(25).
 %initialize.
-initialization(X) :- X.
+%initialization(X) :- X.
 
 :- initialization(initialize).
