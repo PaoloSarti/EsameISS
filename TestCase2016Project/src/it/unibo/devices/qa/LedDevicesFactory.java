@@ -30,7 +30,7 @@ public class LedDevicesFactory {
 		if(leds.containsKey(nPin)){
 			return leds.get(nPin);
 		}
-		leds.put(nPin, new LedShellCmdInterpreter(command, nPin));
+		leds.put(nPin, new LedShellCmdInterpreter(commandInterpreter, nPin));
 		return leds.get(nPin);
 	}
 	
