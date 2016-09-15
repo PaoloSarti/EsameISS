@@ -21,13 +21,13 @@ pinNum(26).
 
 turnTheLed(on):-
 	pinNum(X),
-	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedPi4j(X) returns LED,
+	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmd(X) returns LED,
 	LED <- turnOn.
 
 
 turnTheLed(off):-
 	pinNum(X),
-	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedPi4j(X) returns LED,
+	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmd(X) returns LED,
 	LED <- turnOff.
 	
 %initialize  :-   createPi4jLed(25).
