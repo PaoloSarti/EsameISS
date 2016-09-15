@@ -35,7 +35,7 @@ turnTheLed(off):-
 	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmdInterpreter(X) returns LED,
 	LED <- turnOff.
 
-turnTheLed(offforever):-
+turnTheLed(offcompletely):-
 	pinNum(X),
 	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmdInterpreter(X) returns LED,
 	LED <- turnOffForever.

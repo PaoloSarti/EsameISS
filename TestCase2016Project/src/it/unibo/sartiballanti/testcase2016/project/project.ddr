@@ -8,6 +8,7 @@ Event local_alarm : local_alarm					//events from GUI/External Input
 Event obstacle : obstacle(X)
 Event bagFound : bagFound
 Event endDetection : endDetection
+Event endPhase1 : endPhase1
 
 Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
 Context ctxOperator ip[host="192.168.1.2" port=8015]
@@ -38,9 +39,22 @@ QActor led context ctxDriveRobot
 	Plan senseAlarm
 		println("Led Off, waiting alarm");
 		solve turnTheLed(off) time(0);
-		sense time(60000) alarm-> startBlinking;
+		sense time(60000) alarm-> binkingAlarm;
+		repeatPlan 0
+	
+	Plan binkingAlarm
+		println("led On");
+		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
+		delay time(500) react event endPhase1 -> finish;
+		println("Led Off");
+		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
+		delay time(500) react event endPhase1 -> finish;
 		repeatPlan 0
 		
+	Plan finish
+		solve turnTheLed(offcompletely) time(0) onFailSwitchTo prologFailure;
+		println("Led ends")	
+	
 	Plan prologFailure resumeLastPlan
 		println("Prolog Failure LED")
 }
@@ -124,9 +138,10 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 	Plan detect
 		println("Stopping...");
 		solve endSavemoves time(0) onFailSwitchTo prologFailure;
-		[!? moveList(X)] println(moveList(X));	//DEBUG
-		[!? lastMove(X,Y)] println(lastMove(X,Y));	//DEBUG
-		robotStop speed(100) time(1000);
+		//[!? moveList(X)] println(moveList(X));	//DEBUG
+		//[!? lastMove(X,Y)] println(lastMove(X,Y));	//DEBUG
+		robotStop speed(0) time(1000);
+		//delay time(1000);
 		emit bagFound : bagFound;
 		println("Starting detection Phase...");
 		delay time ( 3000);
@@ -142,6 +157,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		switchToPlan finish
 		
 	Plan finish
+		emit endPhase1 : endPhase1;
 		println("DriveRobot ends")
 		
 	Plan prologFailure
