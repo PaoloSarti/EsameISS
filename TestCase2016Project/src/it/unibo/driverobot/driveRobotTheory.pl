@@ -29,6 +29,7 @@ savemove(CUR,lastMove(move(MV,SPEED,0),FIRSTM),L,lastMove(CUR,M),[move(MV,SPEED,
 	getCurrentMillis(M),
 	DIFF is M - FIRSTM.
 
+%just to put the last command in the list
 endSavemoves:-
 	savemove(executeInput(move(h,100,1000))).
 
@@ -36,7 +37,7 @@ backToBase:-
 	moveList(L),
 	backToBase(L).
 
-backToBase([]):-!.
+backToBase([]).
 
 backToBase([H,T]):-
 	revMove(H,RH),

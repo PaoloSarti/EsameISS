@@ -29,14 +29,8 @@ turnTheLed(off):-
 	pinNum(X),
 	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedPi4j(X) returns LED,
 	LED <- turnOff.
-
-/*
-------------------------------------------------------------
-%initialize
-------------------------------------------------------------
-*/
+	
 %initialize  :-   createPi4jLed(25).
 initialize.
-%initialization(X) :- X.
 
 :- initialization(initialize).

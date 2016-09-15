@@ -7,7 +7,7 @@ public class LedDevicesFactory {
 	
 	private static Map<Integer, ILed> leds;
 	
-	private static String command="./bash/gpioPin.sh";
+	private static String command="sudo bash/gpioPin.sh";
 	
 	static {
 		leds = new HashMap<>();
