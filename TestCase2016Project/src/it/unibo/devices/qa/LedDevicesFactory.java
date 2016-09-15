@@ -3,21 +3,20 @@ package it.unibo.devices.qa;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.unibo.gpio.base.GpioOnPi4j;
-
 public class LedDevicesFactory {
 	
 	private static Map<Integer, ILed> leds;
 	
 	private static String command="./bash/gpioPin.sh";
 	
-	
 	static {
 		leds = new HashMap<>();
-		
 	}
 	
-	//BCM!!!
+	/**
+	 * @param nPin BCM convention!!!
+	 * @return
+	 */
 	public static ILed getTheLedCmd(int nPin){
 		if(leds.containsKey(nPin)){
 			return leds.get(nPin);
@@ -26,6 +25,10 @@ public class LedDevicesFactory {
 		return leds.get(nPin);
 	}
 	
+	/**
+	 * @param nPin BCM convention!!!
+	 * @return
+	 */
 	public static ILed getTheLedPi4j(int nPin){
 		if(leds.containsKey(nPin)){
 			return leds.get(nPin);
