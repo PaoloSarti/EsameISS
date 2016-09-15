@@ -11,19 +11,35 @@
 %	class("it.unibo.devices.qa.DeviceLedPi4jQa") <- getTheLed  returns LED,
 %	LED <- turnOff .
 
-pinNum(26).
+pinNum(25).
+
+%turnTheLed(on):-
+%	pinNum(X),
+%	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmd(X) returns LED,
+%	LED <- turnOn.
+
+
+%turnTheLed(off):-
+%	pinNum(X),
+%	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmd(X) returns LED,
+%	LED <- turnOff.
 
 turnTheLed(on):-
 	pinNum(X),
-	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmd(X) returns LED,
+	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmdInterpreter(X) returns LED,
 	LED <- turnOn.
 
 
 turnTheLed(off):-
 	pinNum(X),
-	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmd(X) returns LED,
+	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmdInterpreter(X) returns LED,
 	LED <- turnOff.
-	
+
+turnTheLed(offforever):-
+	pinNum(X),
+	class("it.unibo.devices.qa.LedDevicesFactory") <- getTheLedCmdInterpreter(X) returns LED,
+	LED <- turnOffForever.
+
 %initialize  :-   createPi4jLed(25).
 initialize.
 

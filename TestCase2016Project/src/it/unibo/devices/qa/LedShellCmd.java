@@ -22,6 +22,11 @@ public class LedShellCmd implements ILed{
 	public void turnOff() {
 		Utils.executeShellCommand(command+" "+nPin+" "+0);
 	}
+
+	@Override
+	public void turnOffForever() {
+		Utils.executeShellCommand(command+" "+nPin+" "+0);
+	}
 	
 	
 	

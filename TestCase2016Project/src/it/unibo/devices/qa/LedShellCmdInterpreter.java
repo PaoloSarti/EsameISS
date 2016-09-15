@@ -1,6 +1,5 @@
 package it.unibo.devices.qa;
 
-import java.io.BufferedOutputStream;
 import java.io.PrintWriter;
 
 import it.unibo.sartiballanti.utils.Utils;
@@ -16,12 +15,14 @@ public class LedShellCmdInterpreter extends LedShellCmd {
 	
 	@Override
 	public void turnOn() {
-		pw.println("1");
+		pw.print("1\n");
+		pw.flush();
 	}
 
 	@Override
 	public void turnOff() {
-		pw.println("0");
+		pw.println("0\n");
+		pw.flush();
 	}
 	
 	public void turnOffForever(){

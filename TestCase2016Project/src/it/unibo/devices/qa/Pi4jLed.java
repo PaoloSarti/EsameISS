@@ -22,4 +22,9 @@ public class Pi4jLed implements ILed{
 		myLed.low();
 	}
 
+	@Override
+	public void turnOffForever() {
+		myLed.low();
+	}
+
 }
