@@ -195,12 +195,7 @@ The software working on the inspector-roobot should support the following behavi
 \textbf{STEP 1}\\
 Design and build a working prototype of this inspector-robot.\\
 \textbf{Non functional requriments at step1}\\
-The goal is to build a software system able to evolve from an initial proptotype (defined as the result of a problem analysis phase) to a final, testable product, by 'mixing' in a proper (pragmatically useful) way agile (SCRUM) software development with modelling.\\
-\textbf{STEP 2 (Implementation Optional)}\\
-Extend the last requirement as follows:
-\begin{itemize}
-\item If the bag is qualifed as "harmful", the Airport Security Center emits an 'alarm' signal and activates another (properly equipped) robot that (starting from the same RBA of the robot inspector) should reach the bag in autonomous way and remove the bag from the area.
-\end{itemize}
+The goal is to build a software system able to evolve from an initial proptotype (defined as the result of a problem analysis phase) to a final, testable product, by 'mixing' in a proper (pragmatically useful) way agile (SCRUM) software development with modelling.
 %===========================================================================
 \section{Requirement analysis}
 \labelsec{ReqAnalysis}
@@ -412,16 +407,51 @@ The \textbf{driveRobotTheory} is used to implement a simple algorithm to come ba
 \section{Testing}
 \labelsec{testing}
 %===========================================================================
-
+In the previous sections, we had an executable model that could be tested, so most of the tests that involve communication between parts of the system have been done at the end of the analysis phase. Initially, communication tests have been executed locally, then the system parts have been deployed on different computational nodes to test system behaviour as a whole, checking if the system behaved as described in the test plan.
 %===========================================================================
 \section{Deployment}
 \labelsec{Deployment}
 %===========================================================================
-
+The parts of the application will be deployed on different computational nodes as JAR executable archives with some configuration files and Prolog theories.
+The platforms we use in this case are a Raspberry Pi board and two PCs, we just need to copy the appropriate files and execute the JAR on every node. The application will start when all the parts of the system have been started.
 %===========================================================================
 \section{Maintenance}
 \labelsec{Maintenance}
+We developed the application using the ddr framework and delaying any technological hypothesis, so the resulting system can be easily modified to add or change features. In the next section, we'll show how new (compatible) requirements need very little changes to the previously developed system.
 %===========================================================================
+\section{Step 2}
+\subsection{Requirements}
+\textbf{STEP 2 (Implementation Optional)}\\
+Extend the last requirement as follows:
+\begin{itemize}
+\item If the bag is qualifed as "harmful", the Airport Security Center emits an 'alarm' signal and activates another (properly equipped) robot that (starting from the same RBA of the robot inspector) should reach the bag in autonomous way and remove the bag from the area.
+\end{itemize}
+\subsection{Requirements analysis}
+\subsubsection{Use cases}
+No new use cases or changes to the previous ones.
+\subsubsection{Scenarios}
+No new scenarios or changes to the previous ones.
+\subsubsection{(Domain) model}
+A new robot is introduced, similar to the previous one. It needs a way to remove the bomb. We just need to add the following to the previous domain model:
+\lstinputlisting[language=ddr, frame=single]{../TestCase2016ExtensionAnalysis/src/it/unibo/sartiballanti/testcase2016/extension/analysis/analysis.ddr}
+\subsubsection{Test plan}
+We need to check if the second robot receives can reach the bomb and remove it. We can test this observing the whole system when the ASC emits the alarm.
+\subsection{Problem analysis}
+\subsubsection{Logic architecture}
+We can obtain the new logic architecture adding a new type of message, the new actor described in the domain model and slightly changing the behavior of the first robot.\\
+The first robot will send the route to the bag to the second robot before the detection phase. The second robot will follow this route to reach the bag and remove it if an alarm is emitted.\\
+\lstinputlisting[language=ddr, frame=single]{../TestCase2016ExtensionLogicArchitecture/src/it/unibo/sartiballanti/testcase2016/extension/analysis/logicArchitecture.ddr}
+\subsection{Work plan}
+We are using the ddr framework, so most of the behaviour of the new robot is already defined. We just need to implement an algorithm that allows the robot to follow the route it received from the other robot and an algorithm to remove the bomb.
+\subsection{Project}
+\subsubsection{Structure}
+\subsubsection{Interaction}
+\subsubsection{Behavior}
+\subsection{Implementation}
+\subsection{Testing}
+\subsection{Deployment}
+\subsection{Maintenance}
+
 \newpage
 See \cite{natMol09} until page 11 (\texttt{CMM}) and pages 96-105.
 
