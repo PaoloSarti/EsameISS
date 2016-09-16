@@ -287,11 +287,12 @@ The Airport Security Center waits for the detection results and can emit the ala
 
 \subsection{Test plan}
 We can do a test plan even before starting to implement the application, as a means to specify the expected behaviour of the system in a precise way. We just need to check if the parts of the system behave and interact with each other as defined in the requirements.
-We can't express tests formally tough, because we already described the entities as actors, so object oriented tests (e.g. JUnit tests) are inadequate. Furthermore, some tests check the interaction of the physiscal system with the environment and this can only be done observing the actual behaviour of the system. Thus, we'll describe these tests in natural language.\\
+We can't express tests formally tough, because we already described the entities as actors, so object oriented tests (e.g. JUnit tests) are inadequate. Furthermore, some tests should check the interaction of the physiscal system with the environment and this can only be achieved by observing the actual behaviour of the system. Thus, we'll describe these tests in natural language.\\
 In the initial phase, the operator drives the robot. We have to check the following:
 \begin{itemize}
 \item the operator can send commands to the robot
 \item the robot executes the commands it receives
+\item the robot accepts commands only from a single source
 \item the robot perceives the presence of an obstacle
 \end{itemize}
 In the detection phase, the robot inspects the bag. We'll test the following:
@@ -332,6 +333,7 @@ The \textbf{Operator Interface} receives commands from the operator as events an
 The \textbf{ASCConsole} receives the detection results from the detection phase and then enables the Airport Security Center to emit the alarm.\\
 We decided to introduce the \textbf{led} as an active entity separated from the robot because it is an active entity that has to intecract with other entities and has its own behaviour, modeling it as a passive object managed by the robot is inappropriate. The led starts to blink when the detection phase begins, stops to blink when the detection phase ends and it starts to blink if the alarm is emitted when the robot is coming back.\\
 The \textbf{camera} will be modeled as a passive entity that can only take a picture when the robot asks for it.\\
+We defined the accessory event botIsBack to signal that the robot has come back to the RBA. This event can be used to stop the led if an alarm has been emitted before.\\
 The interaction with external entities (the operator and the ASC) have been modeled as local events.
 \subsection{Abstraction gap}
 The abstraction gap is the distance between the concepts used to model the problem and those implied by the technology of choice. Thanks to the framework provided, executable code is generated from the model defined in the ddr meta-model. Thus, adopting this framework allows the application designers to use an extremely high-level description of the problem, closer to the application domain, reducing considerably the abstraction gap. The specific technology to be used can be decided later, in a configuration phase. The advantage of using a meta-model and a code generator is also that it can be extended to support more advanced concepts.
@@ -351,14 +353,15 @@ We'll use the following features offered by the framework:
 \item DC motors driver
 \item sonar driver (and management of its data)
 \end{itemize}
-We need to implement these features:
-\begin{itemize}
-\item the interfaces that generate the external entities interaction events
-\item the led blinking logic
-\item the detection phase logic
-\item an algorithm that allows the robot to come back to the RBA
-\end{itemize}
-We also need to decide which platforms will be used by the operator and the Airport Security Center.\\
+We'll implement the remaining features following the SCRUM framework for work planning. So we defined a product backlog which is a prioritized list of tasks needed to complete the project:
+\begin{enumerate}
+\item Define the robot configuration with .baseddr
+\item Implement the console interfaces that allow external entities to interact with the system
+\item Implement the led driver
+\item Decide and implement a way to send a picture in the ddr framework
+\item Develop the detection phase logic with the camera driver (as a mock entity)
+\item Create an algorithm that allows the robot to come back to the RBA
+\end{enumerate}
 
 %===========================================================================
 \section{Project}
@@ -377,23 +380,34 @@ The robot behaviour has slightly changed in the first phase: to ensure it receiv
 %===========================================================================
 \section{Implementation}
 \labelsec{Implementation}
-The \textbf{led} blinking logic is implemented directly as QActor behaviour. The Prolog theory turnTheLed/1 allows the QActor to manage the led and actually turn it on and off calling Pi4j.
-\lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/led/ledTheory.pl}
+\subsection{Robot configuration}
+The file robots.baseddr contains the configuration we used:
+\lstinputlisting[frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
+\subsection{Operator and ASC console}
 The \textbf{operator console} includes a GUI that translates external input events into messages to drive the robot.
 \lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/operator/Operator.java}
 The \textbf{ASC console} includes a GUI that shows the image received from the robot at the end of the detection phase and then shows a button that emits the alarm if pressed.
 \lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/asc/Asc.java}
-The \textbf{robot} uses a Prolog theory to execute the detection phase. It takes a picture of the bag using the simulated \textbf{camera} and sends it to the ASC.\\
+\subsection{Led}
+The \textbf{led} blinking logic is implemented directly as QActor behaviour.\\
+The Prolog theory turnTheLed/1 allows the QActor to manage the led and actually turn it on and off calling the underlying Java code.
+\lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/led/ledTheory.pl}
+The led instance is created through a factory:
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/devices/qa/LedDevicesFactory.java}
+We implemented the led as a bash script that receives zeros and ones to turn the led on and off:
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/devices/qa/LedShellCmdInterpreter.java}
+\lstinputlisting[language=bash, frame=single]{../TestCase2016Project/bash/gpioPinInterpreter.sh}
+\subsection{Camera}
 The camera implements the following interface:
 \lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/camera/ICamera.java}
 This is the implementation of the mock camera:
 \lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/camera/MockFileCamera.java}
-The \textbf{driveRobotTheory} is used to manage the camera and to implement a simple algorithm to come back autonomously: the robot memorizes every move it makes in the first phase, so it can come back executing the same moves backwards.\\
+\subsection{Detection phase}
+The \textbf{robot} uses an actor method to execute the detection phase. It takes a picture of the bag using the simulated \textbf{camera} and sends it to the ASC. In order to send send the photo as a message payload in the ddr framework, we needed to obtain a string representation of the image.\\
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/driverobot/Driverobot.java}
+\subsection{Back to base}
+The \textbf{driveRobotTheory} is used to implement a simple algorithm to come back autonomously: the robot memorizes every move it makes in the first phase, so it can come back executing the same moves backwards.\\
 \lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl}
-
-
-%===========================================================================
-
 %===========================================================================
 \section{Testing}
 \labelsec{testing}
