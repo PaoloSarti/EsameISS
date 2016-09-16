@@ -1,0 +1,217 @@
+RobotSystem testCase2016Project
+
+Event local_inputDrive : local_inputDrive(X)	//events from GUI/External Input
+Dispatch drive : drive(X)
+Dispatch detectionResults : detectionResults(X)	
+Event alarm : alarm
+Event local_alarm : local_alarm					//events from GUI/External Input
+Event obstacle : obstacle(X)
+Event bagFound : bagFound
+Event endDetection : endDetection
+Event botIsBack : botIsBack						//signals the return to the base of the robot
+
+
+//Extension
+Dispatch routeToBag : routeToBag(X)				//sent by the driverobot when the bag is found
+
+Context ctxDriveRobot ip[host="localhost" port=8010]
+Context ctxOperator ip[host="localhost" port=8015]
+Context ctxASC ip[host="localhost" port=8020]
+
+//Extension
+Context ctxRemoverobot ip[ host="localhost" port=8025 ]
+
+
+QActor led context ctxDriveRobot 
+{	
+	Plan init normal
+		println("Led starts");
+		solve consult("ledTheory.pl") time(0) onFailSwitchTo prologFailure; 
+		switchToPlan senseStartBlink
+		
+	Plan senseStartBlink
+		println("Led Sensing");
+		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
+		sense time(60000) bagFound -> startBlinking;
+		repeatPlan 0
+		
+	Plan startBlinking
+		println("led On");
+		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
+		delay time(500) react event endDetection -> senseAlarm;
+		println("Led Off");
+		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
+		delay time(500) react event endDetection -> senseAlarm;
+		repeatPlan 0
+		
+	Plan senseAlarm
+		println("Led Off, waiting alarm");
+		solve turnTheLed(off) time(0);
+		sense time(60000) alarm-> blinkingAlarm;
+		repeatPlan 0
+	
+	Plan blinkingAlarm
+		println("led On");
+		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
+		delay time(500) react event botIsBack -> finish;
+		println("Led Off");
+		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
+		delay time(500) react event botIsBack -> finish;
+		repeatPlan 0
+		
+	Plan finish
+		solve turnTheLed(offcompletely) time(0) onFailSwitchTo prologFailure;
+		println("Led ends")	
+	
+	Plan prologFailure resumeLastPlan
+		println("Prolog Failure LED")
+}
+
+QActor operator context ctxOperator -g cyan
+{
+	Plan init normal
+		println("Operator starts");
+		switchToPlan senseInput
+		
+	Plan senseInput
+		sense time(60000) local_inputDrive -> sendDriveCommands;
+		repeatPlan 0
+		
+	Plan sendDriveCommands resumeLastPlan
+		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
+}
+
+QActor asc context ctxASC -g green
+{
+	Plan init normal
+		println("ASC starts");
+		switchToPlan work
+		
+	Plan work
+		receiveMsg time(600000);
+		onMsg detectionResults : detectionResults(X) -> 
+		solve actorOp(loadResults(X)) time(0) onFailSwitchTo prologFailure;
+		switchToPlan senseAlarm
+		
+	Plan senseAlarm
+		sense time(100000) local_alarm -> continue;
+		onEvent local_alarm : local_alarm -> emit alarm : alarm
+		
+	Plan prologFailure resumeLastPlan
+		println("Prolog failure ASC")
+}
+
+
+ QActor obstacleemitter context ctxDriveRobot 
+{
+	Plan init normal
+		delay time(15000);
+		emit obstacle : obstacle(12);
+		println("Emitted obstacle event")
+}
+
+Robot plexiBox QActor driverobot context ctxDriveRobot -g blue
+{
+	Plan init normal
+		println("driverobot starts");
+		solve consult("talkTheory.pl") time(0) onFailSwitchTo prologFailure;
+		println("consulting driveRobotTheory");
+		solve consult("driveRobotTheory.pl") time(0) onFailSwitchTo prologFailure;
+		println("consulted driveRobotTheory");
+		switchToPlan receiveFirstCommand
+		
+	Plan receiveFirstCommand
+		println("ROBOT waiting first message");
+		receiveMsg time(600000) react event obstacle -> detect;
+		//Save first sender
+		[?? msg(drive,dispatch, S, R, drive(X), N)] solve assert(firstSender(S)) time(0);
+		onMsg drive : drive(X) -> solve savemove(X) time(0) onFailSwitchTo savemoveFailure;
+		onMsg drive : drive(X) -> println(X);
+		onMsg drive : drive(X) -> solve X time(0) onFailSwitchTo prologFailure;
+		onMsg drive : drive(X) -> switchToPlan drive;
+		repeatPlan 0
+	
+	Plan drive 
+		receiveMsg time(600000) react event obstacle -> detect;
+		//To make sure that the sender is the same as the first one
+		[?? msg(drive,dispatch, S, R, drive(X), N)] solve firstSender(S) time(0) onFailSwitchTo drive;
+		onMsg drive : drive(X) -> println(X);
+		onMsg drive : drive(X) -> solve savemove(X) time(0) onFailSwitchTo prologFailure;
+		onMsg drive : drive(X) -> solve X time(0) onFailSwitchTo prologFailure;
+		repeatPlan 0
+		
+	Plan detect
+		println("Stopping...");
+		robotStop speed(100) time(0);
+		delay time(1000);
+		println("Stopped");
+		solve endSavemoves time(0) onFailSwitchTo prologFailure;
+		emit bagFound : bagFound;
+		
+		//Extension
+		println("Sending the route to the second robot");
+		[!? moveList(X)] forward removerobot -m routeToBag : routeToBag(moveList(X));
+		println("Route to bag sent");
+		//End extension
+		
+		println("Starting detection Phase...");
+		delay time ( 3000);
+		[!? detection(X) ] forward asc -m detectionResults : detectionResults(X);
+		delay time ( 3000);
+		println("Detection Results Sent");
+		emit endDetection : endDetection;
+		println("Back to base");
+		switchToPlan backToBase
+		
+	Plan backToBase
+		solve backToBase time(0) onFailSwitchTo prologFailure;	//It doesn't need to react, as the qactor led handles that
+		switchToPlan finish
+		
+	Plan finish
+		emit botIsBack : botIsBack;
+		println("DriveRobot ends")
+		
+	Plan prologFailure
+		println("Robot Failed to load prolog theories")
+		
+	Plan savemoveFailure resumeLastPlan
+		println("Failed save move")
+}
+
+Robot senseBot QActor removerobot context ctxRemoverobot -g yellow {
+	Plan init normal
+		println("Removerobot starts");
+		solve consult("talkTheory.pl") time(0) onFailSwitchTo prologFailure;
+		solve consult("removeRobotTheory.pl") time(0) onFailSwitchTo prologFailure;
+		switchToPlan receiveRoute
+
+	Plan receiveRoute
+		receiveMsg time(60000);
+		onMsg routeToBag : routeToBag(X) -> println(X);
+		onMsg routeToBag : routeToBag(X) -> solve assert(X) time(0);
+		onMsg routeToBag : routeToBag(X) -> switchToPlan waitAlarm;
+		repeatPlan 0
+
+	Plan waitAlarm 
+		println("Waiting for alarm");
+		sense time(60000) alarm, botIsBack -> goToBag, finish;
+		repeatPlan 0
+	
+	Plan waitBotIsBack
+		println("Waiting for driverobot to arrive to RBA");
+		sense time(60000) botIsBack -> goToBag;
+		repeatPlan 0
+	
+	Plan goToBag
+		println("Going to bag");
+		solve gotobag time(0) onFailSwitchTo prologFailure;
+		println("Removing Bag");
+		delay time(5000);
+		println("Removerobot ends")		
+		
+	Plan finish
+		println("Removerobot ends")
+		
+	Plan prologFailure
+		println("Removerobot Failed to load prolog theories")
+}
