@@ -1,9 +1,130 @@
 RobotSystem extensionlogicarchitecture
  
+ 
+Event local_inputDrive : local_inputDrive(X)	//events from GUI/External Input
+Dispatch drive : drive(X)
+Dispatch detectionResults : detectionResults(X)	
 Event alarm : alarm
+Event local_alarm : local_alarm					//events from GUI/External Input
+Event obstacle : obstacle(X)
+Event bagFound : bagFound
+Event endDetection : endDetection
 Dispatch routeToBag : routeToBag(X)		//sent by the driverobot when the bag is found
+Event botIsBack : botIsBack	
 
 Context ctxRemoverobot ip[ host="192.168.1.80" port=8025 ]
+Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
+Context ctxOperator ip[host="192.168.1.2" port=8015]
+Context ctxASC ip[host="192.168.1.2" port=8020]
+
+QActor led context ctxDriveRobot 
+{	
+	Plan init normal
+		println("Led starts");
+		switchToPlan senseStartBlink
+		
+	Plan senseStartBlink
+		println("Led Off");
+		sense time(60000) bagFound -> startBlinking;
+		repeatPlan 0
+		
+	Plan startBlinking
+		println("led On");
+		delay time(1000) react event endDetection -> senseAlarm;
+		println("Led Off");
+		delay time(1000) react event endDetection -> senseAlarm;
+		repeatPlan 0
+		
+	Plan senseAlarm
+		println("Led Off");
+		sense time(60000) alarm-> blinkingAlarm;
+		repeatPlan 0
+		
+	Plan blinkingAlarm
+		println("led On");
+		delay time(500) react event botIsBack -> finish;
+		println("Led Off");
+		delay time(500) react event botIsBack -> finish;
+		repeatPlan 0
+		
+	Plan finish
+		println("Led ends")	
+}
+
+QActor operator context ctxOperator -g cyan
+{
+	Plan init normal
+		println("Operator starts");
+		switchToPlan senseInput
+		
+	Plan senseInput
+		sense time(60000) local_inputDrive -> sendDriveCommands;
+		repeatPlan 0
+		
+	Plan sendDriveCommands resumeLastPlan
+		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
+}
+
+QActor asc context ctxASC -g green
+{
+	Plan init normal
+		println("ASC starts");
+		switchToPlan work
+		
+	Plan work
+		receiveMsg time(600000);
+		onMsg detectionResults : detectionResults(X) -> println(detectionResults(X));
+		switchToPlan senseAlarm
+		
+	Plan senseAlarm
+		sense time(100000) local_alarm -> continue;
+		onEvent local_alarm : local_alarm -> emit alarm : alarm
+}
+
+Robot mock QActor driverobot context ctxDriveRobot 
+{
+	Plan init normal
+		println("driverobot starts");
+		solve consult("talkTheory.pl") time(0) onFailSwitchTo prologFailure;
+		switchToPlan drive
+		
+	Plan drive 
+		//We'll have to make sure that the robot executes the commands from the first console only
+		receiveMsg time(600000) react event obstacle -> detect;
+		onMsg drive : drive(X) -> println(savingmove(X));
+		onMsg drive : drive(X) -> solve X time(0);
+		repeatPlan 0
+		
+	Plan detect
+		println("Stopping...");
+		robotStop speed(100) time(1000);
+		
+		//Extension
+		println("Sending the route to the second robot");
+		forward removerobot -m routeToBag : routeToBag(listOfMoves);
+		println("Route to bag sent");
+		//End extension
+		
+		emit bagFound : bagFound;
+		println("Starting detection Phase...");
+		[?? detection(X) ] forward asc -m detectionResults : detectionResults(X);
+		println("Detection Results Sent");
+		emit endDetection : endDetection;
+		println("Back to base");
+		switchToPlan backToBase
+		
+	Plan backToBase
+		solve backToBase time(0);	//It doesn't need to react, as the qactor led handles that
+		switchToPlan finish
+		
+	Plan finish
+		emit botIsBack : botIsBack;
+		println("DriveRobot ends")
+		
+	Plan prologFailure resumeLastPlan
+		println("Failed to load talkTheory")
+}
+
 
 Robot mock QActor removerobot context ctxRemoverobot {
 	Plan init normal
@@ -17,7 +138,12 @@ Robot mock QActor removerobot context ctxRemoverobot {
 
 	Plan waitAlarm 
 		println("Waiting for alarm");
-		sense time(60000) alarm -> goToBag;
+		sense time(60000) alarm, botIsBack -> waitBotIsBack, finish;
+		repeatPlan 0
+	
+	Plan waitBotIsBack
+		println("Waiting for driverobot to arrive to RBA");
+		sense time(60000) botIsBack -> goToBag;
 		repeatPlan 0
 	
 	Plan goToBag
@@ -25,5 +151,8 @@ Robot mock QActor removerobot context ctxRemoverobot {
 		delay time(5000);
 		println("Removing Bag");
 		delay time(5000);
-		println("Removerobot ends")		
+		switchToPlan finish
+		
+	Plan finish
+		println("Removerobot ends")
 }
