@@ -157,7 +157,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		emit botIsBack : botIsBack;
 		println("DriveRobot ends")
 		
-	Plan prologFailure
+	Plan prologFailure resumeLastPlan
 		println("Robot Failed to load prolog theories")
 		
 	Plan savemoveFailure resumeLastPlan

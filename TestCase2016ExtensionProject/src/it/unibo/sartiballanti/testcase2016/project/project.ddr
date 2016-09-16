@@ -110,7 +110,7 @@ QActor asc context ctxASC -g green
 		println("Emitted obstacle event")
 }
 
-Robot plexiBox QActor driverobot context ctxDriveRobot -g blue
+Robot mymock QActor driverobot context ctxDriveRobot -g blue
 {
 	Plan init normal
 		println("driverobot starts");
@@ -171,14 +171,14 @@ Robot plexiBox QActor driverobot context ctxDriveRobot -g blue
 		emit botIsBack : botIsBack;
 		println("DriveRobot ends")
 		
-	Plan prologFailure
+	Plan prologFailure resumeLastPlan
 		println("Robot Failed to load prolog theories")
 		
 	Plan savemoveFailure resumeLastPlan
 		println("Failed save move")
 }
 
-Robot senseBot QActor removerobot context ctxRemoverobot -g yellow {
+Robot mymock QActor removerobot context ctxRemoverobot -g yellow {
 	Plan init normal
 		println("Removerobot starts");
 		solve consult("talkTheory.pl") time(0) onFailSwitchTo prologFailure;
