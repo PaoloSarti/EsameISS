@@ -3,7 +3,7 @@ RobotSystem extensionlogicarchitecture
 Event alarm : alarm
 Dispatch routeToBag : routeToBag(X)		//sent by the driverobot when the bag is found
 
-Context ctxRemoverobot ip[ host="localhost" port=8025 ]
+Context ctxRemoverobot ip[ host="192.168.1.80" port=8025 ]
 
 Robot mock QActor removerobot context ctxRemoverobot {
 	Plan init normal
