@@ -1,0 +1,29 @@
+RobotSystem extensionlogicarchitecture
+ 
+Event alarm : alarm
+Dispatch routeToBag : routeToBag(X)		//sent by the driverobot when the bag is found
+
+Context ctxRemoverobot ip[ host="localhost" port=8025 ]
+
+Robot mock QActor removerobot context ctxRemoverobot {
+	Plan init normal
+		println("Removerobot starts");
+		switchToPlan receiveRoute
+
+	Plan receiveRoute
+		receiveMsg time(60000);
+		onMsg routeToBag : routeToBag(X) -> switchToPlan waitAlarm;
+		repeatPlan 0
+
+	Plan waitAlarm 
+		println("Waiting for alarm");
+		sense time(60000) alarm -> goToBag;
+		repeatPlan 0
+	
+	Plan goToBag
+		println("Going to bag");
+		delay time(5000);
+		println("Removing Bag");
+		delay time(5000);
+		println("Removerobot ends")		
+}

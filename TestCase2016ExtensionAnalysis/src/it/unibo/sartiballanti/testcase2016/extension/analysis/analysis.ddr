@@ -1,0 +1,22 @@
+RobotSystem extensionanalysis
+ 
+Event alarm : alarm
+
+Context ctxLocal ip[ host="localhost" port=8025 ]
+
+Robot mock QActor removerobot context ctxLocal {
+	Plan init normal
+		println("Removerobot starts");
+		switchToPlan waitAlarm
+
+	Plan waitAlarm 
+		sense time(60000) alarm -> goToBag;
+		repeatPlan 0
+		
+	Plan goToBag
+		println("Going to bag");
+		delay time(5000);
+		println("Removing Bag");
+		delay time(5000);
+		println("Removerobot ends")		
+}

@@ -58,7 +58,7 @@ QActor operator context ctxOperator -g cyan
 		sense time(60000) local_inputDrive -> sendDriveCommands;
 		repeatPlan 0
 		
-	Plan sendDriveCommands
+	Plan sendDriveCommands resumeLastPlan
 		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
 }
 
