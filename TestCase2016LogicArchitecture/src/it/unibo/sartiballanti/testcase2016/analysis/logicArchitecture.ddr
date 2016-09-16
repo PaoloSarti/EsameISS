@@ -8,6 +8,7 @@ Event local_alarm : local_alarm					//events from GUI/External Input
 Event obstacle : obstacle(X)
 Event bagFound : bagFound
 Event endDetection : endDetection
+Event botIsBack : botIsBack						//signals the return to the base of the robot
 
 Context ctxDriveRobot ip[host="192.168.1.69" port=8010]
 Context ctxOperator ip[host="192.168.1.2" port=8015]
@@ -33,8 +34,18 @@ QActor led context ctxDriveRobot
 		
 	Plan senseAlarm
 		println("Led Off");
-		sense time(60000) alarm-> startBlinking;
+		sense time(60000) alarm-> blinkingAlarm;
 		repeatPlan 0
+		
+	Plan blinkingAlarm
+		println("led On");
+		delay time(500) react event botIsBack -> finish;
+		println("Led Off");
+		delay time(500) react event botIsBack -> finish;
+		repeatPlan 0
+		
+	Plan finish
+		println("Led ends")	
 }
 
 QActor operator context ctxOperator -g cyan
@@ -97,6 +108,7 @@ Robot mock QActor driverobot context ctxDriveRobot
 		switchToPlan finish
 		
 	Plan finish
+		emit botIsBack : botIsBack;
 		println("DriveRobot ends")
 		
 	Plan prologFailure resumeLastPlan
