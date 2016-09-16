@@ -10,7 +10,6 @@ Event bagFound : bagFound
 Event endDetection : endDetection
 Event botIsBack : botIsBack						//signals the return to the base of the robot
 
-
 //Extension
 Dispatch routeToBag : routeToBag(X)				//sent by the driverobot when the bag is found
 
@@ -110,7 +109,7 @@ QActor asc context ctxASC -g green
 		println("Emitted obstacle event")
 }
 
-Robot mymock QActor driverobot context ctxDriveRobot -g blue
+Robot plexiBox QActor driverobot context ctxDriveRobot
 {
 	Plan init normal
 		println("driverobot starts");
@@ -178,7 +177,7 @@ Robot mymock QActor driverobot context ctxDriveRobot -g blue
 		println("Failed save move")
 }
 
-Robot mymock QActor removerobot context ctxRemoverobot -g yellow {
+Robot senseBot QActor removerobot context ctxRemoverobot -g yellow {
 	Plan init normal
 		println("Removerobot starts");
 		solve consult("talkTheory.pl") time(0) onFailSwitchTo prologFailure;
