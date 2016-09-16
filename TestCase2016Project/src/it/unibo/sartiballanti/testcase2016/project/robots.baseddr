@@ -45,7 +45,6 @@ Mainrobot mock  [ motors]
  * senseBot
  * 
  */
-
 RobotBase senseBot 
 //BASIC                          
 motorleft  = Motor  [ gpiomotor pincw 6 pinccw 5  ]  position: LEFT
