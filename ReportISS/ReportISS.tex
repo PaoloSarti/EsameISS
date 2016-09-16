@@ -377,7 +377,7 @@ The robot behaviour has slightly changed in the first phase: to ensure it receiv
 \labelsec{Implementation}
 \subsection{Robot configuration}
 The file robots.baseddr contains the configuration we used:
-\lstinputlisting[frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
+\lstinputlisting[firstline=7,lastline=16, frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
 \subsection{Operator and ASC console}
 The \textbf{operator console} includes a GUI that translates external input events into messages to drive the robot.
 \lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/operator/Operator.java}
@@ -408,6 +408,8 @@ The \textbf{driveRobotTheory} is used to implement a simple algorithm to come ba
 \labelsec{testing}
 %===========================================================================
 In the previous sections, we had an executable model that could be tested, so most of the tests that involve communication between parts of the system have been done at the end of the analysis phase. Initially, communication tests have been executed locally, then the system parts have been deployed on different computational nodes to test system behaviour as a whole, checking if the system behaved as described in the test plan.
+In local tests, we used a mock robot that simulated sensors and motors:
+\lstinputlisting[firstline=22,lastline=33,frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
 %===========================================================================
 \section{Deployment}
 \labelsec{Deployment}
@@ -432,25 +434,35 @@ No new use cases or changes to the previous ones.
 \subsubsection{Scenarios}
 No new scenarios or changes to the previous ones.
 \subsubsection{(Domain) model}
-A new robot is introduced, similar to the previous one. It needs a way to remove the bomb. We just need to add the following to the previous domain model:
+A new robot is introduced, similar to the previous one. It needs a way to remove the bag. We just need to add the following to the previous domain model:
 \lstinputlisting[language=ddr, frame=single]{../TestCase2016ExtensionAnalysis/src/it/unibo/sartiballanti/testcase2016/extension/analysis/analysis.ddr}
 \subsubsection{Test plan}
-We need to check if the second robot receives can reach the bomb and remove it. We can test this observing the whole system when the ASC emits the alarm.
+We need to check if the second robot receives can reach the bag and remove it. We can test this observing the whole system after the ASC emits the alarm.
 \subsection{Problem analysis}
 \subsubsection{Logic architecture}
 We can obtain the new logic architecture adding a new type of message, the new actor described in the domain model and slightly changing the behavior of the first robot.\\
-The first robot will send the route to the bag to the second robot before the detection phase. The second robot will follow this route to reach the bag and remove it if an alarm is emitted.\\
+It is not specified by the requirements whether the second robot has to go to the bag as soon as it perceives the alarm, or it can wait until the first robot is returned to the RBA. If it has to start immediatly, collisions may occur during the route. So, in order to avoid this problem, we'll make the second robot wait for the first one. In any case, the second robot should know the bag location as soon as possible. Thus, the first robot will send the route to the bag to the second robot immidiately after it reached the bag. The second robot will follow this route to reach the bag and remove it if an alarm is emitted.
 \lstinputlisting[language=ddr, frame=single]{../TestCase2016ExtensionLogicArchitecture/src/it/unibo/sartiballanti/testcase2016/extension/analysis/logicArchitecture.ddr}
 \subsection{Work plan}
-We are using the ddr framework, so most of the behaviour of the new robot is already defined. We just need to implement an algorithm that allows the robot to follow the route it received from the other robot and an algorithm to remove the bomb.
+We are using the ddr framework, so most of the behaviour of the new robot is already defined. The bag removal will be simulated with a print operation because the robot can't physically move the bag, so we just need to define the second robot configuration and implement an algorithm that allows the robot to follow the route it received from the other robot. 
 \subsection{Project}
 \subsubsection{Structure}
+The structure is the same as the logic architecture.
 \subsubsection{Interaction}
+We introduced the message routeToBag to send the path to follow to the second robot. 
 \subsubsection{Behavior}
+The behavior of the asc console, operator console and led remain unchanged, the first robot just needs to send a new message as described before. The second robot has no actuators, so it will just simulate the bag removal.
+\lstinputlisting[language=ddr, frame=single]{../TestCase2016ExtensionProject/src/it/unibo/sartiballanti/testcase2016/project/project.ddr}
 \subsection{Implementation}
+This is the configuration of the new robot:
+\lstinputlisting[firstline=51,lastline=60,frame=single]{../TestCase2016ExtensionProject/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
+We use the following Prolog theory to make the robot reach the bag:
+\lstinputlisting[language=prolog, frame=single]{../TestCase2016ExtensionProject/src/it/unibo/removerobot/removeRobotTheory.pl}
+The bag removal is just a print operation done by the actor.
 \subsection{Testing}
-\subsection{Deployment}
-\subsection{Maintenance}
+We tested the system as a whole observing the second robot when an alarm is emitted.
+\section{Conclusions}
+
 
 \newpage
 See \cite{natMol09} until page 11 (\texttt{CMM}) and pages 96-105.
