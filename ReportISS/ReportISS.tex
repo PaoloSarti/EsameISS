@@ -153,7 +153,7 @@ numbers=left
 \section{Introduction}
 \labelsec{intro}
 %===========================================================================
-The following report describes the software development process for an IoT application. The whole process is divided in two steps: at first, the client will communicate some requirements for the application, then new features will be requested. The report will show the impact of client requirements changes on the project on both the design and implementation phase.
+The following report describes the software development process employed to analyze, design and implement an IoT application. The whole process is divided into two steps: at first, the client will communicate the initial requirements for the application, then new features will be requested. The report will show the impact of client requirements changes on the project on both the design and implementation phase.
 %===========================================================================
 \section{Vision}
 \labelsec{Vision}
@@ -162,16 +162,16 @@ We want to discuss the process of software development in order to overcome the 
 We try to adopt a model-driven software development taking into account the AGILE methods for cooperation and work management.
 In particular, we want to:
 \begin{itemize}
-\item define a formal, executable model of the application to receive feedback from the client and ensure that requirements are clearly defined as soon as possible 
-\item minimize the abstraction gap between the development tools and the application domain entities
-\item delay any technological hypotesis as much as possible in order to improve application reusability
-\item create flexible applications to resist requirements changes and add new features easily
+\item Define a formal, executable model of the application to receive feedback from the client and ensure that requirements are clearly defined as soon as possible 
+\item Minimize the abstraction gap between the concepts supported by the development tools and the application domain entities.
+\item Delay any technological hypotesis as much as possible in order to support multiple deployment environments and to be able to quickly adapt to technological changes. This is particularly important in heterogeneous distributed environments.
+\item Create flexible applications to resist requirements changes and add new features easily
 \end{itemize}
 %===========================================================================
 \section{Goals}
 \labelsec{Goals}
 %===========================================================================
-The goal is to solve the given problem following the principles described in the vision and determine if this approach is viable and convenient. We want to build a prototype quickly and test if we can add new features to the application with minimum effort.
+The goal is to solve the given problem following the principles described in the vision and determine if this approach is viable and convenient. We want to build a prototype quickly, incrementally enhance it until we have the complete final product. Then we'll see if the application can be adapted quickly to new requirements with minimum effort.
 %===========================================================================
 \section{Requirements}
 \labelsec{Requirements}
@@ -215,6 +215,7 @@ These interactions are shown by the UML below:
 
 \subsection{Scenarios}
 \labelssec{Scenarios}
+Scenario 1:\\ \\
 \begin{tabular}{| l | l |}
 	\hline
 	\textbf{Title} & DriveRobotRemotely
@@ -233,12 +234,12 @@ These interactions are shown by the UML below:
 	When the robot perceives the bag, it starts the detection phase.
 	\\ \hline
 \end{tabular}
-\\
+\\ Scenario 2:\\ \\
 \begin{tabular}{| l | l |}
 	\hline
 	\textbf{Title} & SendAlarm
 	\\ \hline
-	\textbf{Description}  & The Airport Security Center sends an alarm signal to the robot if needed
+	\textbf{Description}  & The Airport Security Center sends an alarm signal to the robot if \\ & needed
 	\\ \hline
 	\textbf{Relationships} & 
 	\\ \hline
@@ -249,7 +250,7 @@ These interactions are shown by the UML below:
 	\textbf{Postconditions} & The robot blinks its led until it comes back to the RBA.
 	\\ \hline
 	\textbf{Main scenario} & 
-	The Airport Security Center uses its interface to send the alarm to the robot. \\ &
+	The Airport Security Center uses its interface to send the alarm \\ & to the robot.
 	The robot blinks its led.
 	\\ \hline
 \end{tabular}

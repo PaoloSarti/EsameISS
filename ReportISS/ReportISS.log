@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2016.8.16)  16 SEP 2016 15:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2016.8.16)  16 SEP 2016 16:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -340,31 +340,38 @@ File: ./img/usecase.png Graphic file (type png)
 Package pdftex.def Info: ./img/usecase.png used on input line 214.
 (pdftex.def)             Requested size: 170.63707pt x 145.54338pt.
  [2]
-Overfull \hbox (27.11145pt too wide) in paragraph at lines 218--256
+Underfull \hbox (badness 10000) in paragraph at lines 218--257
+
+ []
+
+
+Overfull \hbox (27.11145pt too wide) in paragraph at lines 218--257
 [] 
  []
 
 
-Overfull \hbox (72.26709pt too wide) in paragraph at lines 218--256
+Underfull \hbox (badness 10000) in paragraph at lines 218--257
+
+ []
+
+
+Overfull \hbox (19.6966pt too wide) in paragraph at lines 218--257
 [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 268--278
+Underfull \hbox (badness 10000) in paragraph at lines 269--279
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 268--278
+Underfull \hbox (badness 10000) in paragraph at lines 269--279
 
  []
 
 [3 <./img/usecase.png (PNG copy)>]
 (../TestCase2016Analysis/src/it/unibo/sartiballanti/testcase2016/analysis/analy
-sis.ddr
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [4]
+sis.ddr [4]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [5])
@@ -389,8 +396,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [15])
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [16]
 (../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.
-baseddr [16]) (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
+baseddr) (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
 (../TestCase2016Project/src/it/unibo/operator/Operator.java
@@ -412,15 +422,15 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [21])
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [22]
 (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
 (/usr/share/texmf-dist/tex/latex/listings/lstlang2.sty
 File: lstlang2.sty 2015/06/04 1.6 listings language file
 )
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [22]
 (../TestCase2016Project/src/it/unibo/led/ledTheory.pl [23])
 (../TestCase2016Project/src/it/unibo/devices/qa/LedDevicesFactory.java [24])
 (../TestCase2016Project/src/it/unibo/devices/qa/LedShellCmdInterpreter.java
@@ -434,24 +444,24 @@ File: lstlang1.sty 2015/06/04 1.6 listings language file
 (../TestCase2016Project/src/it/unibo/sartiballanti/camera/ICamera.java)
 (../TestCase2016Project/src/it/unibo/sartiballanti/camera/MockFileCamera.java
 [26])
-Underfull \hbox (badness 10000) in paragraph at lines 401--402
+Underfull \hbox (badness 10000) in paragraph at lines 402--403
 
  []
 
-(../TestCase2016Project/src/it/unibo/driverobot/Driverobot.java)
-Underfull \hbox (badness 10000) in paragraph at lines 404--405
+(../TestCase2016Project/src/it/unibo/driverobot/Driverobot.java) [27]
+Underfull \hbox (badness 10000) in paragraph at lines 405--406
 
  []
 
-[27] (../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl
-[28])
+(../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl [28])
+[29]
 (../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.
-baseddr [29]) [30]
+baseddr) [30]
 (../TestCase2016ExtensionAnalysis/src/it/unibo/sartiballanti/testcase2016/exten
-sion/analysis/analysis.ddr)
+sion/analysis/analysis.ddr) [31]
 (../TestCase2016ExtensionLogicArchitecture/src/it/unibo/sartiballanti/testcase2
-016/extension/analysis/logicArchitecture.ddr [31]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+016/extension/analysis/logicArchitecture.ddr
+Underfull \vbox (badness 1019) has occurred while \output is active []
 
  [32]
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -487,38 +497,34 @@ t/robots.baseddr)
 File: img/author_scaled.png Graphic file (type png)
 
 <use img/author_scaled.png>
-Package pdftex.def Info: img/author_scaled.png used on input line 482.
+Package pdftex.def Info: img/author_scaled.png used on input line 483.
 (pdftex.def)             Requested size: 80.62564pt x 98.54247pt.
  <img/io2.jpg, id=148, 200.75pt x 287.0725pt>
 File: img/io2.jpg Graphic file (type jpg)
 
 <use img/io2.jpg>
-Package pdftex.def Info: img/io2.jpg used on input line 492.
+Package pdftex.def Info: img/io2.jpg used on input line 493.
 (pdftex.def)             Requested size: 70.26353pt x 100.47687pt.
  (./ReportISS.bbl) [44 <./img/author_scaled.png> <./img/io2.jpg>] (./ReportISS.
-aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+aux) ) 
 Here is how much of TeX's memory you used:
  5364 strings out of 493013
  74394 string characters out of 6139317
- 312149 words of memory out of 5000000
+ 302303 words of memory out of 5000000
  8750 multiletter control sequences out of 15000+600000
  10339 words of font info for 24 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  40i,11n,48p,660b,1707s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/font
-s/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf-dist/fonts/type1/public/
-cm-super/sfbx1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx14
-40.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/sh
-are/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf-dist/
-fonts/type1/public/cm-super/sfti0900.pfb></usr/share/texmf-dist/fonts/type1/pub
-lic/cm-super/sftt0900.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sf
-tt1000.pfb>
-Output written on ReportISS.pdf (44 pages, 666967 bytes).
+{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/sha
+re/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/
+fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf-dist/fonts/type1/pub
+lic/cm-super/sfbx1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sf
+bx1440.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></us
+r/share/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf-d
+ist/fonts/type1/public/cm-super/sfti0900.pfb></usr/share/texmf-dist/fonts/type1
+/public/cm-super/sftt0900.pfb></usr/share/texmf-dist/fonts/type1/public/cm-supe
+r/sftt1000.pfb>
+Output written on ReportISS.pdf (44 pages, 667148 bytes).
 PDF statistics:
  188 PDF objects out of 1000 (max. 8388607)
  128 compressed objects within 2 object streams
