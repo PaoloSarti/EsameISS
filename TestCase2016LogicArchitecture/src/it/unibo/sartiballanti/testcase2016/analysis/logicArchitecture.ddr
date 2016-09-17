@@ -48,7 +48,7 @@ QActor led context ctxDriveRobot
 		println("Led ends")	
 }
 
-QActor operator context ctxOperator -g cyan
+QActor operatorconsole context ctxOperator -g cyan
 {
 	Plan init normal
 		println("Operator starts");
@@ -63,7 +63,7 @@ QActor operator context ctxOperator -g cyan
 		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
 }
 
-QActor asc context ctxASC -g green
+QActor ascconsole context ctxASC -g green
 {
 	Plan init normal
 		println("ASC starts");
@@ -98,7 +98,7 @@ Robot mock QActor driverobot context ctxDriveRobot
 		robotStop speed(100) time(1000);
 		emit bagFound : bagFound;
 		println("Starting detection Phase...");
-		[?? detection(X) ] forward asc -m detectionResults : detectionResults(X);
+		[?? detection(X) ] forward ascconsole -m detectionResults : detectionResults(X);
 		println("Detection Results Sent");
 		emit endDetection : endDetection;
 		println("Back to base");
