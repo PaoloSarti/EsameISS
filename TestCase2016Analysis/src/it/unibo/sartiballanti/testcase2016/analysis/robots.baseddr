@@ -32,20 +32,10 @@ motors = Actuators [ motorleft , motorright  ] private position: BOTTOM
 Mainrobot mock  [ motors,rot ]      
 ; 
 
-
-/*
- * --------------------------------------------
- * DISAGIOBOT 2.0
- * --------------------------------------------
- */
-
-RobotBase robotTemplate 
-//BASIC                          
-motorleft  = Motor  [ gpiomotor pincw 8 pinccw 9  ]  position: RIGHT
-motorright = Motor  [ gpiomotor pincw 12 pinccw 13  ]  position: LEFT
-distanceRadar = Distance  [ sonarhcsr04 pintrig 0 pinecho 1]  position: FRONT_TOP
-//line = Line   [ gpioswitch pin 15 activelow ]  position: BOTTOM 
-//COMPOSED
+RobotBase mymock               
+ //BASIC                
+motorleft  = Motor  [ simulated 0  ]  position: LEFT
+motorright = Motor  [ simulated 0  ]  position: RIGHT
 motors = Actuators [ motorleft , motorright  ] private position: BOTTOM
-Mainrobot robotTemplate  [ motors ]   
-;  
+Mainrobot mymock  [ motors ]      
+; 

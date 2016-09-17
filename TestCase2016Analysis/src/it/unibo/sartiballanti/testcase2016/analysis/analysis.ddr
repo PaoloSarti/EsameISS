@@ -4,48 +4,44 @@ Dispatch drive : drive(X)
 Dispatch detectionResults : detectionResults(X)	 
 Event alarm : alarm								
 Event obstacle : obstacle(X)					
+Event local_inputDrive : local_inputDrive(X)	//events from GUI/External Input
+Event local_alarm : local_alarm					//events from GUI/External Input
   
 Context ctxDriveRobot ip[host="localhost" port=8010]
 Context ctxOperator ip[host="localhost" port=8015]
 Context ctxASC ip[host="localhost" port=8020]
 
-QActor operator context ctxOperator
+QActor operator context ctxOperator -g cyan
 {
 	Plan init normal
 		println("Operator starts");
-		switchToPlan sendCommands
+		switchToPlan senseInput
 		
-	Plan sendCommands
-		println("Waiting for commands");
-		delay time(3000);
-		println("Sending command");
-		forward driverobot -m drive : drive("driveCmdPayLoad");
-		println("Command sent");
-		delay time(2000);
-		repeatPlan 0	
+	Plan senseInput
+		sense time(60000) local_inputDrive -> sendDriveCommands;
+		repeatPlan 0
+		
+	Plan sendDriveCommands resumeLastPlan
+		onEvent local_inputDrive : local_inputDrive(X) -> forward driverobot -m drive : drive(X)	
 }
 
-QActor asc context ctxASC
+QActor asc context ctxASC -g green
 {
 	Plan init normal
 		println("ASC starts");
-		switchToPlan waitForResults
+		switchToPlan work
 		
-	Plan waitForResults
+	Plan work
 		receiveMsg time(600000);
-		onMsg detectionResults : detectionResults(X) -> 
-		println(detectionResults(X));
-		onMsg detectionResults : detectionResults(X) -> 
-		switchToPlan riskDecision
+		onMsg detectionResults : detectionResults(X) -> println(detectionResults(X));
+		switchToPlan senseAlarm
 		
-	Plan riskDecision
-		println("Evaluating risks");
-		delay time(3000);
-		//It could emit the alarm signal
-		emit alarm : alarm		
+	Plan senseAlarm
+		sense time(100000) local_alarm -> continue;
+		onEvent local_alarm : local_alarm -> emit alarm : alarm
 }
 
-Robot mock QActor driverobot context ctxDriveRobot 
+Robot mymock QActor driverobot context ctxDriveRobot 
 {
 	Plan init normal
 		println("driverobot starts");
