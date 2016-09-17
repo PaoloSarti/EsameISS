@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.9.17)  17 SEP 2016 11:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.9.17)  17 SEP 2016 17:01
 entering extended mode
 **./ReportISS.tex
 (ReportISS.tex
@@ -405,7 +405,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 baseddr) ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
-(../TestCase2016Project/src/it/unibo/operator/Operator.java
+(../TestCase2016Project/src/it/unibo/operatorconsole/Operatorconsole.java
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 1.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
@@ -420,7 +420,10 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [19])
-(../TestCase2016Project/src/it/unibo/asc/Asc.java [20]
+(../TestCase2016Project/src/it/unibo/ascconsole/Ascconsole.java
+Underfull \vbox (badness 5260) has occurred while \output is active []
+
+ [20]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [21]
@@ -436,7 +439,10 @@ File: lstlang2.sty 2015/06/04 1.6 listings language file
 (../TestCase2016Project/src/it/unibo/led/ledTheory.pl [23])
 (../TestCase2016Project/src/it/unibo/devices/qa/LedDevicesFactory.java [24])
 (../TestCase2016Project/src/it/unibo/devices/qa/LedShellCmdInterpreter.java
-[25]) ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
+Underfull \vbox (badness 5260) has occurred while \output is active []
+
+ [25])
+("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
@@ -456,16 +462,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 405--406
  []
 
 (../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl [28])
-[29]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [29]
 (../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.
 baseddr) [30]
 (../TestCase2016ExtensionAnalysis/src/it/unibo/sartiballanti/testcase2016/exten
 sion/analysis/analysis.ddr) [31]
 (../TestCase2016ExtensionLogicArchitecture/src/it/unibo/sartiballanti/testcase2
-016/extension/analysis/logicArchitecture.ddr
-Underfull \vbox (badness 1019) has occurred while \output is active []
-
- [32]
+016/extension/analysis/logicArchitecture.ddr [32]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [33]
@@ -494,8 +499,12 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [41])
 (../TestCase2016ExtensionProject/src/it/unibo/sartiballanti/testcase2016/projec
 t/robots.baseddr)
-(../TestCase2016ExtensionProject/src/it/unibo/removerobot/removeRobotTheory.pl
-[42]) [43] <img/author_scaled.png, id=146, 115.18031pt x 140.77594pt>
+(../TestCase2016ExtensionProject/src/it/unibo/removerobot/removeRobotTheory.pl)
+[42] [43]
+
+LaTeX Warning: Citation `natMol09' on page 44 undefined on input line 469.
+
+<img/author_scaled.png, id=146, 115.18031pt x 140.77594pt>
 File: img/author_scaled.png Graphic file (type png)
 
 <use img/author_scaled.png>
@@ -508,12 +517,16 @@ File: img/io2.jpg Graphic file (type jpg)
 Package pdftex.def Info: img/io2.jpg used on input line 493.
 (pdftex.def)             Requested size: 70.26353pt x 100.47687pt.
  (ReportISS.bbl) [44 <./img/author_scaled.png> <./img/io2.jpg>] (ReportISS.aux)
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 5363 strings out of 493334
- 74812 string characters out of 3139252
- 302069 words of memory out of 3000000
- 8736 multiletter control sequences out of 15000+200000
+ 5361 strings out of 493334
+ 74914 string characters out of 3139252
+ 303231 words of memory out of 3000000
+ 8734 multiletter control sequences out of 15000+200000
  10339 words of font info for 24 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  40i,11n,48p,663b,1707s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -527,9 +540,9 @@ cal\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm0900.pk> <C:\Users\Paolo\
 AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1000.pk> <C:\Us
 ers\Paolo\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1440.
 pk><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on ReportISS.pdf (44 pages, 621744 bytes).
+Output written on ReportISS.pdf (44 pages, 620732 bytes).
 PDF statistics:
- 472 PDF objects out of 1000 (max. 8388607)
+ 473 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

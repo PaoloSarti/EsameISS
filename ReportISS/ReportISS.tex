@@ -381,9 +381,9 @@ The file robots.baseddr contains the configuration we used:
 \lstinputlisting[firstline=7,lastline=16, frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
 \subsection{Operator and ASC console}
 The \textbf{operator console} includes a GUI that translates external input events into messages to drive the robot.
-\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/operator/Operator.java}
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/operatorconsole/Operatorconsole.java}
 The \textbf{ASC console} includes a GUI that shows the image received from the robot at the end of the detection phase and then shows a button that emits the alarm if pressed.
-\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/asc/Asc.java}
+\lstinputlisting[language=java, frame=single]{../TestCase2016Project/src/it/unibo/ascconsole/Ascconsole.java}
 \subsection{Led}
 The \textbf{led} blinking logic is implemented directly as QActor behaviour.\\
 The Prolog theory turnTheLed/1 allows the QActor to manage the led and actually turn it on and off calling the underlying Java code.
