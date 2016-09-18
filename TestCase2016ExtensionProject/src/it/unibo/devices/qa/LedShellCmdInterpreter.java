@@ -21,7 +21,7 @@ public class LedShellCmdInterpreter extends LedShellCmd {
 
 	@Override
 	public void turnOff() {
-		pw.println("0\n");
+		pw.print("0\n");
 		pw.flush();
 	}
 	

@@ -282,7 +282,7 @@ The Airport Security Center waits for the detection results and can emit the ala
 %\subsection{System model}
 
 \subsection{Test plan}
-We can do a test plan even before starting to implement the application, as a means to specify the expected behaviour of the system in a precise way. We just need to check if the parts of the system behave and interact with each other as defined in the requirements.
+We can do a test plan even before starting to implement the application, as a way to specify the expected behaviour of the system in a precise way. We just need to check if the parts of the system behave and interact with each other as defined in the requirements.
 We can't express tests formally tough, because we already described the entities as actors, so object oriented tests (e.g. JUnit tests) are inadequate. Furthermore, some tests should check the interaction of the physiscal system with the environment and this can only be achieved by observing the actual behaviour of the system. Thus, we'll describe these tests in natural language.\\
 In the initial phase, the operator drives the robot. We have to check the following:
 \begin{itemize}
@@ -325,9 +325,9 @@ We can formally express these concepts with the DDR custom language:
 This describes the whole logic architecture of our application. It can also be executed so that the client can confirm that the analysis defined a system that behaves as required.\\
 This architecture derives from the one obtained in the domain model and introduces new interactions and a new entity.\\
 The \textbf{DriveRobot} receives commands from the Operator Interface in the first phase, executes its automatic operations during the detection phase, it sends results to the ASCConsole and comes back to the RBA in the end. It has to react to obstacles to begin the detection phase.\\
-The \textbf{Operator Interface} receives commands from the operator as events and sends the corresponding commands to the robot.\\
-The \textbf{ASCConsole} receives the detection results from the detection phase and then enables the Airport Security Center to emit the alarm.\\
-We decided to introduce the \textbf{led} as an active entity separated from the robot because it is an active entity that has to intecract with other entities and has its own behaviour, modeling it as a passive object managed by the robot is inappropriate. The led starts to blink when the detection phase begins, stops to blink when the detection phase ends and it starts to blink if the alarm is emitted when the robot is coming back.\\
+The \textbf{Operator Console} receives commands from the operator as events and sends the corresponding commands to the robot.\\
+The \textbf{ASC Console} receives the detection results from the detection phase and then enables the Airport Security Center to emit the alarm.\\
+We decided to introduce the \textbf{led} as an active entity separated from the robot because it is an active entity that has to intecract with other entities and has its own behaviour, modeling it as a passive object managed by the robot is inappropriate. The led starts to blink when the detection phase begins, stops to blink when the detection phase ends and it starts to blink again if the alarm is emitted when the robot is coming back.\\
 The \textbf{camera} will be modeled as a passive entity that can only take a picture when the robot asks for it.\\
 We defined the accessory event botIsBack to signal that the robot has come back to the RBA. This event can be used to stop the led if an alarm has been emitted before.\\
 The interaction with external entities (the operator and the ASC) have been modeled as local events.
@@ -408,7 +408,7 @@ The \textbf{driveRobotTheory} is used to implement a simple algorithm to come ba
 \section{Testing}
 \labelsec{testing}
 %===========================================================================
-In the previous sections, we had an executable model that could be tested, so most of the tests that involve communication between parts of the system have been done at the end of the analysis phase. Initially, communication tests have been executed locally, then the system parts have been deployed on different computational nodes to test system behaviour as a whole, checking if the system behaved as described in the test plan.
+In the previous sections, we had an executable model that could be tested, so most of the tests that involve communication between parts of the system have been done at the end of the analysis phase. Initially, communication tests have been executed locally, then the system parts have been deployed on different computational nodes to test system behaviour as a whole in a distributed environment, checking if the system behaved as described in the test plan.
 In local tests, we used a mock robot that simulated sensors and motors:
 \lstinputlisting[firstline=22,lastline=33,frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
 %===========================================================================
