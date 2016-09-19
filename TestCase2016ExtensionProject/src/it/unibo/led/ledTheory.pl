@@ -11,7 +11,7 @@
 %	class("it.unibo.devices.qa.DeviceLedPi4jQa") <- getTheLed  returns LED,
 %	LED <- turnOff .
 
-pinNum(25).
+pinNum(26).
 
 %turnTheLed(on):-
 %	pinNum(X),

@@ -194,7 +194,7 @@ Robot plexiBox QActor removerobot context ctxRemoverobot {
 
 	Plan waitAlarm 
 		println("Waiting for alarm");
-		sense time(60000) alarm, botIsBack -> goToBag, finish;
+		sense time(60000) alarm, botIsBack -> waitBotIsBack, finish;
 		repeatPlan 0
 	
 	Plan waitBotIsBack
