@@ -101,15 +101,6 @@ QActor ascconsole context ctxASC -g green
 		println("Prolog failure ASC")
 }
 
-
-//QActor obstacleemitter context ctxDriveRobot 
-//{
-//	Plan init normal
-//		delay time(15000);
-//		emit obstacle : obstacle(12);
-//		println("Emitted obstacle event")
-//}
-
 Robot senseBot QActor driverobot context ctxDriveRobot
 {
 	Plan init normal
