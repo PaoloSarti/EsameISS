@@ -257,7 +257,7 @@ Scenario 1:\\ \\
 
 %\subsection{Requirements model}
 %\labelssec{Requirements model}
-
+\newpage
 \subsection{(Domain) model}
 \labelssec{Domain model}
 In this phase we try to find an agreement with the client on what the entities mentioned in the requirements are and what they have to do.\\The system is composed by three parts:
@@ -273,14 +273,14 @@ DC motors, wheels, led, sonar and camera are the hardware components mounted on 
 \\A \textbf{led} can be turned on or off.
 \\A \textbf{sonar} can send an ultrasonic signal (trigger) and generates a corresponding response waveform (echo). The waveform analysis allows to estimate the distance from an obstacle.
 \\ A \textbf{camera} is a device that can take photos when requested. It will be used by the robot in the detection phase.\\ \\
-The system can be formally defined with a custom language / executable meta-model developed by our software house. It allows us to describe what are the parts of the system, how they interact with each other and their behaviour. \\ \\
+We want to define the system formally so that we can avoid ambiguity and generate an executable version of said model, but we want to avoid any technology assumption. To achieve this, we will use the custom language / executable meta-model developed by our software house. It allows us to describe what the parts of the system are, how they interact with each other and their behaviour and it can generate the corresponding executable code.\\ \\
 The following is a first description of the system obtained by the requirement analysis:
 %inserire qui il listato .ddr di analisi dei requisiti
 \lstinputlisting[language=ddr, frame=single]{../TestCase2016Analysis/src/it/unibo/sartiballanti/testcase2016/analysis/analysis.ddr}
 The operator can only send commands to drive the robot.
 The Airport Security Center waits for the detection results and can emit the alarm only after the results have been sent.
 %\subsection{System model}
-
+\newpage
 \subsection{Test plan}
 We can do a test plan even before starting to implement the application, as a way to specify the expected behaviour of the system in a precise way. We just need to check if the parts of the system behave and interact with each other as defined in the requirements.
 We can't express tests formally tough, because we already described the entities as actors, so object oriented tests (e.g. JUnit tests) are inadequate. Furthermore, some tests should check the interaction of the physiscal system with the environment and this can only be achieved by observing the actual behaviour of the system. Thus, we'll describe these tests in natural language.\\
@@ -308,7 +308,7 @@ In the final phase, the robot comes back to the RBA. These are the tests we'll d
 \end{itemize}
 At this stage in the development process, we can't define more specific functional or integration tests, we'll add them as needed during the implementation phase.
 We still haven't decided what technology we will use to implement the application, so we can't write executable tests yet. However, at the end of the analysis phase, we'll have an executable logical architecture of the application and we'll be able to perform some of the tests on it.
-
+\newpage
 %===========================================================================
 \section{Problem analysis}
 \labelsec{ProblemAnalysis}
@@ -332,8 +332,17 @@ The \textbf{camera} will be modeled as a passive entity that can only take a pic
 We defined the accessory event botIsBack to signal that the robot has come back to the RBA. This event can be used to stop the led if an alarm has been emitted before.\\
 The interaction with external entities (the operator and the ASC) have been modeled as local events.
 \subsection{Abstraction gap}
-The abstraction gap is the distance between the concepts used to model the problem and those implied by the technology of choice. Thanks to the framework provided, executable code is generated from the model defined in the ddr meta-model. Thus, adopting this framework allows the application designers to use an extremely high-level description of the problem, closer to the application domain, reducing considerably the abstraction gap. The specific technology to be used can be decided later, in a configuration phase. The advantage of using a meta-model and a code generator is also that it can be extended to support more advanced concepts.
+The abstraction gap is the distance between the concepts used to model the problem and those implied by the technology available.
+Based on the previous analysis, we found out that this application needs a set of features that includes:
+\begin{itemize}
+\item Synchronous and asynchronous communication between heterogeneous parts of a distributed system
+\item Distributed events
+\item Communication with entities that are not part of the system
+\item Interruptable actions
+\end{itemize}
+All the features we need can be implemented with current technology: actually, the framework developed by our software house can offer these features.
 \subsection{Risk analysis}
+Thanks to the framework provided, executable code is generated from the model defined in the ddr meta-model. Thus, adopting this framework allows the application designers to use an extremely high-level description of the problem, closer to the application domain, reducing considerably the abstraction gap. The specific technology to be used can be decided later, during implementation phase. The advantage of using a meta-model and a code generator is also that it can be extended to support more advanced concepts.
 Using the framework code generators, we can write most of the code independently from the specific implementation technology. Although the qa/ddr metamodel is technology independent, the code generated automatically may require some kind of environment on the computational nodes where it will be deployed (e.g. the JVM, the .NET runtime environment, a specific operating system etc).
 %===========================================================================
 \section{Work plan}
@@ -372,7 +381,7 @@ More details have been added to implement the missing features described in the 
 The consoles used by the ASC and the operator will be GUIs that allow them to interact with the system.
 The robot behaviour has slightly changed in the first phase: to ensure it receives messages from a single source, it memorizes the sender of the first received drive message and accepts new drive commands from that source only.
 \lstinputlisting[language=ddr, frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/project.ddr}
-
+\newpage
 %===========================================================================
 \section{Implementation}
 \labelsec{Implementation}
@@ -404,6 +413,7 @@ The \textbf{robot} uses an actor method to execute the detection phase. It takes
 \subsection{Back to base}
 The \textbf{driveRobotTheory} is used to implement a simple algorithm to come back autonomously: the robot memorizes every move it makes in the first phase, so it can come back executing the same moves backwards.\\
 \lstinputlisting[language=prolog, frame=single]{../TestCase2016Project/src/it/unibo/driverobot/driveRobotTheory.pl}
+\newpage
 %===========================================================================
 \section{Testing}
 \labelsec{testing}
@@ -411,12 +421,13 @@ The \textbf{driveRobotTheory} is used to implement a simple algorithm to come ba
 In the previous sections, we had an executable model that could be tested, so most of the tests that involve communication between parts of the system have been done at the end of the analysis phase. Initially, communication tests have been executed locally, then the system parts have been deployed on different computational nodes to test system behaviour as a whole in a distributed environment, checking if the system behaved as described in the test plan.
 In local tests, we used a mock robot that simulated sensors and motors:
 \lstinputlisting[firstline=22,lastline=33,frame=single]{../TestCase2016Project/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
+Finally, we deployed the system parts on their final location and tested the complete system and checked that it behaved as described in the test plan.
 %===========================================================================
 \section{Deployment}
 \labelsec{Deployment}
 %===========================================================================
-The parts of the application will be deployed on different computational nodes as JAR executable archives with some configuration files and Prolog theories.
-The platforms we use in this case are a Raspberry Pi board and two PCs, we just need to copy the appropriate files and execute the JAR on every node. The application will start when all the parts of the system have been started.
+The parts of the application will be deployed on different computational nodes as JAR executable archives with some configuration files, Prolog theories and bash scripts.
+The platforms we use in this case are a Raspberry Pi board on the robot and two PCs to provide the consoles, we just need to copy the appropriate files, set execution permissions for the bash scripts and execute the JAR on every node. The application will start when all the parts of the system have been started.
 %===========================================================================
 \section{Maintenance}
 \labelsec{Maintenance}
@@ -445,7 +456,7 @@ We can obtain the new logic architecture adding a new type of message, the new a
 It is not specified by the requirements whether the second robot has to go to the bag as soon as it perceives the alarm, or it can wait until the first robot is returned to the RBA. If it has to start immediatly, collisions may occur during the route. So, in order to avoid this problem, we'll make the second robot wait for the first one. In any case, the second robot should know the bag location as soon as possible. Thus, the first robot will send the route to the bag to the second robot immidiately after it reached the bag. The second robot will follow this route to reach the bag and remove it if an alarm is emitted.
 \lstinputlisting[language=ddr, frame=single]{../TestCase2016ExtensionLogicArchitecture/src/it/unibo/sartiballanti/testcase2016/extension/analysis/logicArchitecture.ddr}
 \subsection{Work plan}
-We are using the ddr framework, so most of the behaviour of the new robot is already defined. The bag removal will be simulated with a print operation because the robot can't physically move the bag, so we just need to define the second robot configuration and implement an algorithm that allows the robot to follow the route it received from the other robot. 
+We are using the ddr framework, so most of the behaviour of the new robot is already defined. The bag removal will be simulated with a print operation because our robot can't physically move the bag, so we just need to define the second robot configuration and implement an algorithm that allows the robot to follow the route it received from the other robot. 
 \subsection{Project}
 \subsubsection{Structure}
 The structure is the same as the logic architecture.
@@ -456,13 +467,12 @@ The behavior of the asc console, operator console and led remain unchanged, the 
 \lstinputlisting[language=ddr, frame=single]{../TestCase2016ExtensionProject/src/it/unibo/sartiballanti/testcase2016/project/project.ddr}
 \subsection{Implementation}
 This is the configuration of the new robot:
-\lstinputlisting[firstline=51,lastline=60,frame=single]{../TestCase2016ExtensionProject/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
+\lstinputlisting[firstline=32,lastline=41,frame=single]{../TestCase2016ExtensionProject/src/it/unibo/sartiballanti/testcase2016/project/robots.baseddr}
 We use the following Prolog theory to make the robot reach the bag:
 \lstinputlisting[language=prolog, frame=single]{../TestCase2016ExtensionProject/src/it/unibo/removerobot/removeRobotTheory.pl}
 The bag removal is just a print operation done by the actor.
 \subsection{Testing}
 We tested the system as a whole observing the second robot when an alarm is emitted.
-\section{Conclusions}
 
 
 \newpage
