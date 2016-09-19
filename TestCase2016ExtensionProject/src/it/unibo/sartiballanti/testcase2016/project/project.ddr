@@ -36,10 +36,10 @@ QActor led context ctxDriveRobot
 		
 	Plan startBlinking
 		println("led On");
-		solve turnTheLed(on) time(0) react event endDetection -> senseAlarm;
+		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
 		delay time(500) react event endDetection -> senseAlarm;
 		println("Led Off");
-		solve turnTheLed(off) time(0) react event endDetection -> senseAlarm;
+		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
 		delay time(500) react event endDetection -> senseAlarm;
 		repeatPlan 0
 		
@@ -52,10 +52,10 @@ QActor led context ctxDriveRobot
 	Plan blinkingAlarm
 		println("Alarm! Blinking again");
 		println("led On");
-		solve turnTheLed(on) time(0) react event botIsBack -> finish;
+		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
 		delay time(500) react event botIsBack -> finish;
 		println("Led Off");
-		solve turnTheLed(off) time(0) react event botIsBack -> finish;
+		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
 		delay time(500) react event botIsBack -> finish;
 		repeatPlan 0
 		
