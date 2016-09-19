@@ -13,12 +13,12 @@ Event botIsBack : botIsBack						//signals the return to the base of the robot
 //Extension
 Dispatch routeToBag : routeToBag(X)				//sent by the driverobot when the bag is found
 
-Context ctxDriveRobot ip[host="192.168.43.87" port=8010]
+Context ctxDriveRobot ip[host="192.168.43.162" port=8010]
 Context ctxOperator ip[host="192.168.43.159" port=8015]
 Context ctxASC ip[host="192.168.43.241" port=8020]
 
 //Extension
-Context ctxRemoverobot ip[ host="192.168.43.162" port=8025 ]
+Context ctxRemoverobot ip[ host="192.168.43.87" port=8025 ]
 
 
 QActor led context ctxDriveRobot 
@@ -50,6 +50,7 @@ QActor led context ctxDriveRobot
 		repeatPlan 0
 	
 	Plan blinkingAlarm
+		println("Alarm! Blinking again");
 		println("led On");
 		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
 		delay time(500) react event botIsBack -> finish;
@@ -109,7 +110,7 @@ QActor ascconsole context ctxASC -g green
 //		println("Emitted obstacle event")
 //}
 
-Robot plexiBox QActor driverobot context ctxDriveRobot
+Robot senseBot QActor driverobot context ctxDriveRobot
 {
 	Plan init normal
 		println("driverobot starts");
@@ -177,7 +178,7 @@ Robot plexiBox QActor driverobot context ctxDriveRobot
 		println("Failed save move")
 }
 
-Robot senseBot QActor removerobot context ctxRemoverobot {
+Robot plexiBox QActor removerobot context ctxRemoverobot {
 	Plan init normal
 		println("Removerobot starts");
 		solve consult("talkTheory.pl") time(0) onFailSwitchTo prologFailure;
