@@ -13,7 +13,7 @@ Event botIsBack : botIsBack						//signals the return to the base of the robot
 //Extension
 Dispatch routeToBag : routeToBag(X)				//sent by the driverobot when the bag is found
 
-Context ctxDriveRobot ip[host="192.168.1.2" port=8010]
+Context ctxDriveRobot ip[host="192.168.1.45" port=8010]
 Context ctxOperator ip[host="192.168.1.2" port=8015]
 Context ctxASC ip[host="192.168.1.2" port=8020]
 
@@ -101,13 +101,13 @@ QActor ascconsole context ctxASC -g green
 }
 
 
- QActor obstacleemitter context ctxDriveRobot 
-{
-	Plan init normal
-		delay time(15000);
-		emit obstacle : obstacle(12);
-		println("Emitted obstacle event")
-}
+//QActor obstacleemitter context ctxDriveRobot 
+//{
+//	Plan init normal
+//		delay time(15000);
+//		emit obstacle : obstacle(12);
+//		println("Emitted obstacle event")
+//}
 
 Robot mymock QActor driverobot context ctxDriveRobot
 {
