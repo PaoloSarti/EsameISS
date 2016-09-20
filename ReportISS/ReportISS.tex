@@ -153,7 +153,7 @@ numbers=left
 \section{Introduction}
 \labelsec{intro}
 %===========================================================================
-The following report describes the software development process employed to analyze, design and implement an IoT application. The whole process is divided into two steps: at first, the client will communicate the initial requirements for the application, then new features will be requested. The report will show the impact of client requirements changes on the project on both the design and implementation phase.
+The following report describes the software development process employed to analyze, design and implement an IoT application. The whole process is divided into two steps: at first, the client will communicate the initial requirements for the application, then new features will be requested. This report will show the impact of client requirements changes on the project on both the design and implementation phase.
 %===========================================================================
 \section{Vision}
 \labelsec{Vision}
@@ -331,6 +331,7 @@ We decided to introduce the \textbf{led} as an actor separated from the robot be
 The \textbf{camera} will be modeled as a passive entity that can only take a picture when the robot asks for it.\\
 We defined the accessory event botIsBack to signal that the robot has come back to the RBA. This event can be used to stop the led if an alarm has been emitted before.\\
 The interaction with external entities (the operator and the ASC) have been modeled as local events.
+\newpage
 \subsection{Abstraction gap}
 The abstraction gap is the distance between the concepts used to model the problem and those implied by the technology available.
 Based on the previous analysis, we found out that this application needs a set of features that includes:
@@ -472,8 +473,11 @@ We use the following Prolog theory to make the robot reach the bag:
 \lstinputlisting[language=prolog, frame=single]{../TestCase2016ExtensionProject/src/it/unibo/removerobot/removeRobotTheory.pl}
 The bag removal is just a print operation done by the actor.
 \subsection{Testing}
-We tested the system as a whole observing the second robot when an alarm is emitted.
-
+At first, the system has been tested simulating everything in a local environment. in order to test the second robot's behaviour, we deployed it on a physical robot and simulated the first robot. Finally, we deployed the entire system using two physical robots and two laptops for the ASC console and the operator console.
+\section{Conclusions}
+%impatto delle modifiche
+In this project, we followed a model-based approach in the analysis phase and we combined it with AGILE methods in the work plan and implementation phase. At the end of the analysis phase, we managed to obtain an executable model of the whole system. Thanks to the framework provided, the application design process has been done with tools and concepts close to the application domain. Technological choices have been delayed: this allowed us to change the implementation technology for some parts of the system during the implementation phase. The framework in its current state can generate code only for some platforms, but it's possible to extend it to support more platforms.
+This development process proved to be resistant to reasonable requirement changes: the second version of the application has been done mostly reusing the previous one, with minimal changes and in a short period of time.
 
 \newpage
 See \cite{natMol09} until page 11 (\texttt{CMM}) and pages 96-105.
