@@ -39,7 +39,7 @@ QActor led context ctxDriveRobot
 	Plan senseAlarm
 		println("Led Off, waiting alarm");
 		solve turnTheLed(off) time(0);
-		sense time(60000) alarm-> blinkingAlarm;
+		sense time(60000) alarm, botIsBack-> blinkingAlarm, finish;
 		repeatPlan 0
 	
 	Plan blinkingAlarm
