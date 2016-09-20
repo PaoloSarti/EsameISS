@@ -37,26 +37,26 @@ QActor led context ctxDriveRobot
 	Plan startBlinking
 		println("led On");
 		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
-		delay time(500) react event endDetection -> senseAlarm;
+		delay time(1500) react event endDetection -> senseAlarm;
 		println("Led Off");
 		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
-		delay time(500) react event endDetection -> senseAlarm;
+		delay time(1500) react event endDetection -> senseAlarm;
 		repeatPlan 0
 		
 	Plan senseAlarm
 		println("Led Off, waiting alarm");
 		solve turnTheLed(off) time(0);
-		sense time(60000) alarm-> blinkingAlarm;
+		sense time(60000) alarm, botIsBack-> blinkingAlarm, finish;
 		repeatPlan 0
 	
 	Plan blinkingAlarm
 		println("Alarm! Blinking again");
 		println("led On");
 		solve turnTheLed(on) time(0) onFailSwitchTo prologFailure;
-		delay time(500) react event botIsBack -> finish;
+		delay time(1500) react event botIsBack -> finish;
 		println("Led Off");
 		solve turnTheLed(off) time(0) onFailSwitchTo prologFailure;
-		delay time(500) react event botIsBack -> finish;
+		delay time(1500) react event botIsBack -> finish;
 		repeatPlan 0
 		
 	Plan finish
@@ -159,6 +159,7 @@ Robot senseBot QActor driverobot context ctxDriveRobot
 		switchToPlan finish
 		
 	Plan finish
+		delay time (1000);
 		emit botIsBack : botIsBack;
 		println("DriveRobot ends")
 		
